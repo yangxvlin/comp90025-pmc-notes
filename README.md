@@ -46,7 +46,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
   - CREW
   - CRCW
   - ERCW (not commonly used)
-- 4 CW conflicts model [22]
+- 4 CW conflicts model -> CRCW is used [22]
   - ||description
     |---|---|
     |COMMON|processors都agree了才write
@@ -96,13 +96,13 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
         - in O(log p) steps with p/2 processors 
         - by Suboptimal EREW Parallel Summation [40]
           - Suboptimal EREW Lambda=Sum
-- Optimal COMMON CRCW Logical [44]
+- Optimal COMMON Logical [44]
   - |||
     |---|---|
     |input size|n
     |t(n)|O(n/p) steps
     |p(n)|n
-- Suboptimal COMMON CRCW Maximum [47]
+- Suboptimal COMMON Maximum [47]
   - |||
     |---|---|
     |input size|n^2
