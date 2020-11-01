@@ -133,6 +133,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
      #   in O(log p) steps with p/2 processors
      return Suboptimal EREW Lambda=Max (input = B, input size = p)
      ```
+- TODO Slide 50
 ### optimal EREW pattern
 - (1)
   - ```
