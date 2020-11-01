@@ -27,7 +27,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
 - Amdahl's Law: S(p) = 1/f | large p
   - f = fraction of this time that cannot be parallelized
   - predict the maximum achievable speedup for a given program
-- Gustafson"s Law: S(p) = p + (1 − p) s.
+- Gustafson's Law: S(p) = p + (1 − p) s.
   - s = sequential part
 - efficiency = E = S(p) / p
   - max p for optimal processor allocation? [29]
