@@ -87,26 +87,31 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     
     return input[0]
     ```
-- Optimal EREW Parallel Summation [42] 
+- Optimal EREW Summation [42] 
     - |||
       |---|---|
       |input size|n
       |t(n)|O(n/p + log p) = O(log n) steps
       |p(n)|p = n/log n
       |T(n)|O(n)
-    1. each processor sum own sub array to a new array B[p]
+    1. each processor sum own sub array to a local array B[p]
        - in O(n/p) steps with p processors
     2. sum B(p)
         - in O(log p) steps with p/2 processors 
-        - by Suboptimal EREW Parallel Summation [40]
-          - Suboptimal EREW Lambda=Sum
-- Optimal COMMON Logical [44]
+          - by Suboptimal EREW Summation [40]
+            - = Suboptimal EREW Lambda=Sum
+- Optimal COMMON Logical_OR [44]
   - |||
     |---|---|
     |input size|n
     |t(n)|O(n/p) steps
     |p(n)|n
     |T(n)|O(n^2)
+  - ```
+    similar pattern as [Optimal EREW Summation]
+        - each processor sequentially cal subarray to localArr
+        - parallel localArr to finalResult by suboptimal EREW algorithm
+    ```
 - Suboptimal COMMON Maximum [47]
   - |||
     |---|---|
