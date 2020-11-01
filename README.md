@@ -139,8 +139,8 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       Input: array
       initialize localArr[p]
 
-      for each processor: 
-          sequentially cal subarray to localArr
+      for each processor_i: 
+          sequentially cal subarray to localArr[i]
       
       parallelize reducing localArr to finalResult by Suboptimal EREW algorithm (LAMBDA)
       ```
