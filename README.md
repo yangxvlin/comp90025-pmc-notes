@@ -104,6 +104,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     |p(n)|n
     |T(n)|O(n^2)
   - optimal EREW pattern (1)
+    - no O(log p) because we use localVar instead of localArr, so no parallelize reduce just return
 - Suboptimal COMMON Maximum [47]
   - |||
     |---|---|
