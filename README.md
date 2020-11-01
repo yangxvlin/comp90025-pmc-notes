@@ -94,12 +94,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       |t(n)|O(n/p + log p) = O(log n) steps
       |p(n)|p = n/log n
       |T(n)|O(n)
-    1. each processor sum own sub array to a local array B[p]
-       - in O(n/p) steps with p processors
-    2. sum B(p)
-        - in O(log p) steps with p/2 processors 
-          - by Suboptimal EREW Summation [40]
-            - = Suboptimal EREW Lambda=Sum
+    - optimal EREW pattern (1)
 - Optimal COMMON Logical_OR [44]
   - |||
     |---|---|
@@ -107,11 +102,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     |t(n)|O(n/p) steps
     |p(n)|n
     |T(n)|O(n^2)
-  - ```
-    similar pattern as [Optimal EREW Summation]
-        - each processor sequentially cal subarray to localArr
-        - parallel localArr to finalResult by suboptimal EREW algorithm
-    ```
+  - optimal EREW pattern (1)
 - Suboptimal COMMON Maximum [47]
   - |||
     |---|---|
@@ -126,6 +117,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     |t(n)|O(n/p + log n) <br /> = O(log n / n + log n^2 - log log n) steps by substitute in p(n) <br /> = O(log n / n + 2 log n) steps <br /> = O(log n) steps
     |p(n)|p = n^2/log n
     |T(n)|O(n^2)
+   - optimal EREW pattern
    - ```
      # initialize
      B[p]
@@ -141,6 +133,18 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
      #   in O(log p) steps with p/2 processors
      return Suboptimal EREW Lambda=Max (input = B, input size = p)
      ```
+### optimal EREW pattern
+- (1)
+  - ```
+      Input: array
+      initialize localArr[p]
+
+      for each processor: 
+          sequentially cal subarray to localArr
+      
+      parallelize reducing localArr to finalResult by Suboptimal EREW algorithm (LAMBDA)
+      ```
+
 ## 02 
 
 ## 03
