@@ -32,11 +32,10 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
 - efficiency = E = S(p) / p
   - max p for optimal processor allocation? [29]
 - feasibility: def [32]
-  - 如果我们algorithm demand的资源随n增长的太快的话, 氪金也解决不了问题 
-  - [33]
-    - feasible
-    - feasible highly parallel
-    - inherently sequential
+  - 如果我们algorithm demand的资源随n增长的太快的话, 氪金也解决不了问题   
+  - feasible [33]
+  - feasible highly parallel [33]
+  - inherently sequential [33]
   - Nick’s Class: def [34]
 ### PRAM
 - PRAM [20]
