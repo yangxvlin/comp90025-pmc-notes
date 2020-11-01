@@ -61,11 +61,14 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       - impossible example [44]
   - Any algorithm for a CRCW PRAM in the PRIORITY model 
     - can be "simulated" by 
-      - an EREW PRAM with the same number of processors and 
+      - an EREW PRAM with the same number of processors  
+        and 
       - with the parallel time increased by only a factor of O(log p).
   - Any algorithm for a PRIORITY PRAM 
     - can be simulated by
-      - a COMMON PRAM with no loss in parallel time provided sufficiently many processors are available.
+      - a COMMON PRAM with no loss in parallel time  
+       and
+      - provided sufficiently many processors are available.
 ### algorithm
 - Suboptimal EREW Lambda
   - |||
@@ -73,6 +76,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     |input size|n
     |t(n)|O(log n) steps
     |p(n)|p = n/2
+    |T(n)|O(n)
     |Lambda|:: Ord a => (a, a) -> a
   - ```
     j = n/2
@@ -90,6 +94,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       |input size|n
       |t(n)|O(n/p + log p) = O(log n) steps
       |p(n)|p = n/log n
+      |T(n)|O(n)
     1. each processor sum own sub array to a new array B[p]
        - in O(n/p) steps with p processors
     2. sum B(p)
@@ -102,27 +107,30 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     |input size|n
     |t(n)|O(n/p) steps
     |p(n)|n
+    |T(n)|O(n^2)
 - Suboptimal COMMON Maximum [47]
   - |||
     |---|---|
     |input size|n^2
     |t(n)|O(log log n) steps
     |p(n)|n^2
+    |T(n)|O(n)
 - Optimal EREW Maximum
   - |||
     |---|---|
     |input size|n^2
     |t(n)|O(n/p + log n) <br /> = O(log n / n + log n^2 - log log n) steps by substitute in p(n) <br /> = O(log n / n + 2 log n) steps <br /> = O(log n) steps
     |p(n)|p = n^2/log n
+    |T(n)|O(n^2)
    - ```
      # initialize
      B[p]
-     for each processor i from 0 to p:
+     for each processor i from 0 to p-1:
         B[i] = MIN
      
      for each processor i from 0 to p: # in O(log n) steps with n / log n processors
-        # log n = input size / p(n)
-        for j from i*log n to (i+1)*log n: # exclusive
+        # input size / p(n) = log n
+        for j from i*(input size/p) to (i+1)*(input size/p) - 1:
             B[i] = max(B[i], input[j])
      
      # Suboptimal EREW Maximum
