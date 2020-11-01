@@ -1,8 +1,8 @@
 # comp90025-pmc-notes
 COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary sheet
 
-## note
-- knowledge [location in xuliny's slide]
+## terminology
+- knowledge [location in xuliny's lecture slide]
 - def: definition
 
 ## 01 introduction
