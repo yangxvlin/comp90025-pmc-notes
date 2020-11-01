@@ -3,6 +3,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
 
 ## terminology
 - knowledge [location in xuliny's lecture slide]
+- {xxx} link current knowledge with xxx (you can just search xxx in this document)
 - def: definition
 
 ## 01 introduction
