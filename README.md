@@ -261,7 +261,75 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       ```
 
 
-## 02 
+## 02 architecture
+- PE: processing element
+- criticism of the PRAM [2] = why we need architecture
+- Flynn's taxnomy [4]
+  - SISD [5]
+  - SIMD [6, 7]
+    - good for data parallelism
+    - GPUs contain many small SIMD modules
+  - MIMD [8]
+  - SIMD v.s. MIMD
+    - SIMD
+      - adv
+        1. simple to code
+        2. PRAM algorithms are close to SIMD
+    - MIMD
+      - adv
+        1. more flexible | given a number of PE
+      - disadv
+        1. more expensive
+        2. have multiple control unit here, which takes more space on chip and cost more time for instruction stream to arrive **(force the clock speed to be lower)**
+  - MISD: There are no machines widely accepted to be MISD
+- Schwartz's parallel machine classes [10]
+  - paracomputers = shared memory multiprocessor
+  - ultracomputer = distributed memory multiprocessor
+  - Shared versus distributed memory [12]
+    - shared memory system
+      - = symmetric multiprocessor (SMP) | all processors are identical
+      - adv: easier to code
+    - distributed memory system
+      - = message passing machine
+      - adv: scale up with less cost
+    - distributed shared memory (DSM)
+      - = has distributed memory but a single address space
+- Uniformity of shared memory access [13]
+  - |a shared memory system can be either|||adv|disadv
+    |---|---|---|---|---
+    |UMA|uniform memory access|[14]|Caches improve performance| but need protocols to keep cache coherency
+    |NUMA|non-uniform memory access|[15]|Access to local memory is fast| Access to remote memory is slower
+    |COMA|cache-only memory architecture|[]|
+- Simultaneous memory access [16]
+  - Real memory access is different form theory
+  - Memory Access Patterns:
+    1. Memory is divided into one or more banks (roughly, sticks of RAM).
+    2. Once a bank is accessed, it has a recharge time before it can be accessed again.
+  - Addressing memory banks [17]   
+    <img width="80%" src="./docs/1.jpg"/>
+- Coprocessors [18]
+  - GPU and Xeon Phi
+  - adv: low cost parallelism
+  - dosadv: architecturally they present more challenges
+- Implicit versus Explicit [19]
+  - parallelism implicit/explicit
+  - decomposition implicit/explicit
+  - mapping implicit/explicit
+  - communication implicit/explicit
+  - ||adv|
+    |---|---
+    |implicit|easier to code
+    |explicit|high performance
+- SPMD and MPMD [20]
+  |||def|Framework
+  |---|---|---|---|
+  |SPMD|Single Program Multiple Data|a single program that executes on a different portion of the data|OpenMP<br />OpenMPI<br />OpenCL
+  |MPMD|Multiple Program Multiple Data|1. different programs are written, for different threads<br /> 2. one thread may be a "master" thread, with different code from "worker" threads
+- |parallelism model|suitable when|
+  |---|---|
+  |Thread model [21]|running on<br /> 1. a single UMA machine or <br />2. a distributed shared memory architecture that implicitly distributes threads
+  |Process model [22]|running on multiple machines, i.e., when there is no shared memory (NUMA).
+  |Hybrid model [23]|running a single process on each machine and having each process use multiple threads
 
 ## 03
 
