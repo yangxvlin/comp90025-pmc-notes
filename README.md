@@ -467,6 +467,55 @@ thread is allowed to continue beyond the barrier
     |p(n)|p = n
     |T(n)|O(n)
   - can use { Optimal EREW Broadcast } to make CREW to EREW for operation on line 12
+  - Execution on X = [5, 2, 3, 8, 2, 3, 4, 5], n = 8
+    - -> means the return of the function call
+    - line 7, UpperLower([5, 2, 3, 8], 4) -> S[0:4] = [5, 7, 10, 18]
+      - line 7, UpperLower([5, 2], 2) -> S[0:2] = [5, 7]
+        - line 7, UpperLower([5], 1) -> S[0:1] = 5
+        - line 9, UpperLower([2], 1) -> S[1:2] = 2
+        - // now S = [5, 7]
+        - line 10, i from 1 to 1:
+          - S[1] += S[0] -> S[1] = 5+2 = 7
+        - return S = [5, 7]
+      - line 9, UpperLower([3, 8], 2) -> S[2:4] = [3, 11]
+        - line 7, UpperLower([3], 1) -> S[0:1] = 3
+        - line 9, UpperLower([8], 1) -> S[1:2] = 8
+        - // now S = [3, 8]
+        - line 10, i from 1 to 1:
+          - S[1] += S[0] -> S[1] = 3+8 = 11
+        - return S = [3, 11]
+      - // now S = [5, 7, 3, 11]
+      - line 10, i from 2 to 3:
+        - S[2] += S[1] -> S[2] = 7+3 = 10
+        - S[3] += S[1] -> S[3] = 11+7 = 18
+      - return S = [5, 7, 10, 18]
+    - line 9, UpperLower([2, 3, 4, 5], 4) -> S[4:8] = [2, 5, 9, 14]
+      - line 7, UpperLower([2, 3], 2) -> S[0:2] = [2, 5]
+        - line 7, UpperLower([2], 1) -> S[0:1] = 2
+        - line 9, UpperLower([3], 1) -> S[1:2] = 3
+        - // now S = [2, 3]
+        - line 10, i from 1 to 1:
+          - S[1] += S[0] -> S[1] = 2+3 = 5
+        - return S = [2, 5]
+      - line 9, UpperLower([4, 5], 2) -> S[2:4] = [4, 9]
+        - line 7, UpperLower([4], 1) -> S[0:1] = 4
+        - line 9, UpperLower([5], 1) -> S[1:2] = 5
+        - // now S = [4, 5]
+        - line 10, i from 1 to 1:
+          - S[1] += S[0] -> S[1] = 4+5 = 9
+        - return S = [4, 9]
+      - // now S = [2, 5, 4, 9]
+      - line 10, i from 2 to 3:
+        - S[2] += S[1] -> S[2] = 5+4 = 9
+        - S[3] += S[1] -> S[3] = 5+9 = 14
+      - return S = [2, 5, 9, 14]
+    - // now S = [5, 7, 10, 18, 2, 5, 4, 9]
+      - line 10, i from 4 to 7:
+        - S[4] += S[3] -> S[4] = 2+18 = 20
+        - S[5] += S[3] -> S[5] = 5+18 = 23
+        - S[6] += S[3] -> S[6] = 9+18 = 27
+        - S[7] += S[3] -> S[7] = 14+18 = 32
+    - return S = [5, 7, 10, 18, 20, 23, 27, 32]
 - Suboptimal EREW Odd/Even parallel prefix algorithm [12, 13]
   - |||
     |---|---|
@@ -474,6 +523,31 @@ thread is allowed to continue beyond the barrier
     |t(n)|O(log n)
     |p(n)|p = n
     |T(n)|O(n)
+  - Execution on X = [5, 2, 3, 8, 2, 3, 4, 5], n = 8
+    - -> means the return of the function call
+    - line 2, False
+    - line 8, index [0, 2, 4, 6] gives
+      - S = [5, _, 3, _, 2, _, 4, _]
+    - line 11, index [1, 3, 5, 7] gives
+      - P's index floor(i/2) = [0, 1, 2, 3]
+      - P = [7, 11, 5, 9]
+    - line 13, OddEven(X=P, 4) -> A = [7, 9, 12, 20, 22]
+      - line 2, True
+        - S = [7, ...]
+        - for i from 1 to 4
+          - S[1] = X[1] + S[0] = 7+7 = 14
+          - S[2] = X[2] + S[1] = 11+14 = 28
+          - S[3] = X[3] + S[2] = 5+28 = 33
+          - S[4] = X[4] + S[3] = 9+20 = 22
+        - return S = [7, 9, 12, 20, 22]
+    - line 14, for i from 2 to 7
+      - line 15, if i mod 2 == 0:
+        - S[2] += A[0] = 3+7 = 10
+        - S[4] += A[1] = 2+9 = 11
+        - S[6] += A[2] = 4+12 = 16
+    - // now S = [5, _, 10, _, 11, _, 16, _]
+    - return S = [5, _, 10, _, 11, _, 16, _]
+- Ladner and Fischer's parallel prefix algorithm [18]
 - Optimal EREW Prefix sum
   - |||
     |---|---|
