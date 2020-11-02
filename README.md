@@ -77,6 +77,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       - EREW PRAM by
         - without using any additional processor/time complexity
     - { Optimal EREW Broadcast }
+  - [forum](https://canvas.lms.unimelb.edu.au/courses/17524/discussion_topics/361358)
 ### EREW algorithm
 - Suboptimal EREW Lambda
   - |||
@@ -571,6 +572,49 @@ thread is allowed to continue beyond the barrier
         for processor_i in range(0, p) do in parallel:
             input[ceil(k*p) + i] += last  # update previous subarray's prefix to cur subarray
     ```
+### Pointer jumping
+- P is a list of nodes and P[i] ∈ P is a pointer to a node in P
+- Suboptimal EREW ListRank [27]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log n) steps
+    |p(n)|n
+    |T(n)|O(n)
+  - Execution on [tute07 6-16]
+- Optimal EREW ListRank [27]
+  - Change line 4 in slide 30 for { Optimal EREW ListPrefixSum } to: 
+    - ``` S[i] <- If P[i].next == NULL then 0 else 1. ```
+- Sumoptimal CREW FindRoots [28]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log n) steps
+    |p(n)|n
+    |T(n)|O(n)
+- Suboptimal EREW ListPrefixSum [29]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log n) steps
+    |p(n)|n
+    |T(n)|O(n)
+  - Execution on [tute07 18-23]
+- Optimal EREW ListPrefixSum [30, 31]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(n/p + log p) steps
+    |p(n)|p = n / log n
+    |T(n)|O(n)
+  - similar idea as { Optimal EREW Prefix sum }
+    - divide whole list to sublist with size = log n, sequential sum each sublist on each processor
+    - parallelize previous sublist result to cur sublist
+  - Or use { Optimal EREW ListRank } and { Optimal EREW PrefixSum } [31]
+    - convert list to array by ListRank
+    - prefix sum the converted array
+- [parallel tree traversal](https://cse.iitkgp.ac.in/~debdeep/courses_iitkgp/PAlgo/Autumn16-17/slides/Lect4PJumping.pdf)
+
 ## 06
 
 ## 07
