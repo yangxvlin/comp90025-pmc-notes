@@ -69,6 +69,12 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       - a COMMON PRAM with no loss in parallel time  
        and
       - provided sufficiently many processors are available.
+    - { COMMON SimulatePriority }
+  - CR PRAMs 
+    - can be simulated by
+      - EREW PRAM by
+        - without using any additional processor/time complexity
+    - { Optimal EREW Broadcast }
 ### EREW algorithm
 - Suboptimal EREW Lambda
   - |||
@@ -119,16 +125,73 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
      #   in O(log p) steps with p/2 processors
      return Suboptimal EREW Lambda=Max (input = B, input size = p)
      ```
+- Suboptimal EREW Replication [53]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log n)
+    |p(n)|p = n
+    |T(n)|O(n)
+- Optimal EREW Replication [54]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(n/p + log n)
+    |p(n)|p = n/log n
+    |T(n)|O(n)
+  - input an arr [a1, a2, ..., an] return [a1, a1, ..., a1]
+- Optimal EREW Broadcast [55]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log p) = O(log n + log log n) = O(log n) steps
+    |p(n)|p = n/log n
+    |T(n)|O(n)
+  - processor 0 has val, have a [val, val, ..., val].size=n in memory
+    - by using Suboptimal EREW Replication
+- EREW SimulatePriority [59]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log n) steps
+    |p(n)|p = n
+    |T(n)|O(n)
+  - How to execute:
+    ```
+    Input: W[n]: W[i] is the address that PRIORITY processor i wants to write to
+    # initialize A[n] with 
+    for i in range (0, p):
+        A[i] = (i, w[i], False) # (index, address, whether we are allowed to write)
+        
+    sort(A, lambda = \x, y, z -> cmp y, then cmp x then ) # Sort by address W[i] then id[i]
+
+    for i in range (0, p):
+        if i == 0:  # Lowest id for the smallest address always wins
+            (a, b, _) <- A[0]
+            A[0] = (a, b, True) 
+        else:
+            (a, b, _) <- A[i]
+            c <- A[i] 跟 A[i-1] 比较 snd; if 相等 True otherwise False
+            A[i] <- (a, b, c)
+
+    for i in range (0, p):
+        if A[i].c:
+            # processor i performs write
+            PRIORITY processor i can write to W[i]
+        else:
+            Discard write operation
+    ```
 #### optimal EREW pattern
 - (1)
   - ```
+      t(n): O(n/p + log n)
       Input: array
       initialize localArr[p]
 
       for each processor_i: 
           sequentially cal subarray to localArr[i]
       
-      # parallel reduce
+      # reduce
       parallelize reducing localArr to finalResult by Suboptimal EREW algorithm (LAMBDA)
       ```
 ### COMMON algorithm
@@ -148,6 +211,29 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     |t(n)|O(log log n) steps
     |p(n)|n^2
     |T(n)|O(n)
+- COMMON SimulatePriority [57]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(1) steps
+    |p(n)|n^2
+    |T(n)|O(n) on Priority
+  - How to execute:
+    ```
+    Input: W[n]: W[i] is the address that PRIORITY processor i wants to write to
+    M[n] = [True, ..., True]
+    
+    check whether W has duplicate, if any, M[higher p_i] = False
+      # only M[lowest i] = True if CW Conflict
+    
+    for i in range(0, p):
+        if M[p_i]:
+            # processor i performs write
+            PRIORITY processor p_i can write to W[p_i]
+        else:
+            Discard Write operation
+    ``` 
+     
 ### PRIORITY algorithm
 - Optimal PRIORITY ElementUnique
   - |||
@@ -156,9 +242,11 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     |t(n)|O(1) steps
     |p(n)|n
     |T(n)|O(n)
+  - optimal Priority pattern (1)
 #### optimal Priority pattern
 - (1)
   - ```
+      t(n): O(1)
       Input: array
       initialize localArr[p], localVar
 
