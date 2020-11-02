@@ -307,10 +307,12 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     2. Once a bank is accessed, it has a recharge time before it can be accessed again.
   - Addressing memory banks [17]   
     <img width="80%" src="./docs/1.jpg"/>
+  - So, parallel memory access, rather than parallel processing
 - Coprocessors [18]
   - GPU and Xeon Phi
-  - adv: low cost parallelism
-  - dosadv: architecturally they present more challenges
+  - |adv|disadv|
+    |---|---|
+    |low cost parallelism|architecturally they present more challenges
 - Implicit versus Explicit [19]
   - parallelism implicit/explicit
   - decomposition implicit/explicit
