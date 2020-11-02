@@ -318,23 +318,97 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
   - decomposition implicit/explicit
   - mapping implicit/explicit
   - communication implicit/explicit
-  - ||adv|
-    |---|---
+  - ||adv||
+    |---|---|---|
     |implicit|easier to code
-    |explicit|high performance
+    |explicit|high performance|OpenMP
 - SPMD and MPMD [20]
   |||def|Framework
   |---|---|---|---|
-  |SPMD|Single Program Multiple Data|a single program that executes on a different portion of the data|OpenMP<br />OpenMPI<br />OpenCL
-  |MPMD|Multiple Program Multiple Data|1. different programs are written, for different threads<br /> 2. one thread may be a "master" thread, with different code from "worker" threads
-- |parallelism model|suitable when|
-  |---|---|
-  |Thread model [21]|running on<br /> 1. a single UMA machine or <br />2. a distributed shared memory architecture that implicitly distributes threads
-  |Process model [22]|running on multiple machines, i.e., when there is no shared memory (NUMA).
-  |Hybrid model [23]|running a single process on each machine and having each process use multiple threads
+  |SPMD|Single Program Multiple Data|a single program that executes on a different portion of the data|OpenMP #pragma for<br />OpenMPI<br />OpenCL
+  |MPMD|Multiple Program Multiple Data|1. different programs are written, for different threads<br /> 2. one thread may be a "master" thread, with different code from "worker" threads|OpenMP #pragma sections/single
+- |parallelism model||suitable when||
+  |---|---|---|---|
+  |Thread parallelism model|[21]|running on<br /> 1. a single UMA machine or <br />2. a distributed shared memory architecture that implicitly distributes threads|OpenMP
+  |Process parallelism model|[22]|running on multiple machines, i.e., when there is no shared memory (NUMA).
+  |Hybrid parallelism model|[23]|running a single process on each machine and having each process use multiple threads
 
-## 03
-
+## 03 OpenMP
+- What is OpenMP? [3]
+  - Thread Parallelism model
+  - Explicit Parallelism
+  - Fork-Join Model [4]
+- Compiler Directives [7]
+  - ``` #pragma omp parallel default ( shared ) private ( beta ) ```
+- Run-time Library Routines [8, 9]
+  - ``` int omp_get_num_threads ( void ); ```
+  - [大全](https://software.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/optimization-and-programming-guide/openmp-support/openmp-library-support/openmp-run-time-library-routines.html)
+- Environment Variables [16, 17]
+  - ``` export OMP_NUM_THREADS=10 ```
+  - ```OMP_DYNAMIC```
+  - ```OMP_NESTED```
+  - ```OMP_THREAD_LIMIT```
+  - ```OMP_STACKSIZE```
+  - [大全](https://docs.oracle.com/cd/E19205-01/819-5270/aewcb/index.html)
+- C/C++ general code structure [10, 11, 12]
+- OpenMP Directives [18, 19, 20, 21, 22, 23, 24]
+  - ``` 
+    # pragma omp parallel [ clause [ clause ...]] 
+    structured_block 
+    ```
+  - Work-Sharing Constructs 
+    - NOWAIT
+      - If specified, then threads do not synchronize at the end of the parallel loop.
+    - ``` #pramga omp parallel for ``` [23]
+      - SCHEDULE (Dynamic vs Static [24, 28]) 
+        - Describes how iterations of the loop are divided among the threads in the team.
+        - |scheduler|adv|disadv
+          |---|---|---|
+          |Dynamic|better when the iterations may take very different amounts of time|has scheduler overhead <br />After each iteration, the threads must stop and receive a new value of the loop variable to use for its next iteration.
+          |Guided|allows a tradeoff: <br /> 1. less overhead than dynamic <br />2. better splitting of workload among threads than static.
+      - ORDERED clause [30]
+        - Specifies that the iterations of the loop must be executed as they would be in a serial program.
+      - COLLAPSE clause [31]
+        - Specifies how many loops in a nested loop should be collapsed into one large iteration space and divided according to the schedule clause.
+    - ``` 
+      #pramga omp sections [ nowait ] 
+          # pragma omp section
+              structured_block
+          # pragma omp section
+              structured_block
+          # pragma omp section
+              structured_block
+      ``` 
+      [32, 33]
+    - ```
+      # pragma omp single [ nowait ]
+          structured_block
+      ```
+      [34, 35]
+- Synchronization and sharing variables
+  1. critical [37]: ensures executions of the critical block to one thread at a time.
+  2. barrier [38]: ensures that all threads in the team have reach the barrier before any
+thread is allowed to continue beyond the barrier
+  3. atomic [39]: ensures that updates to a variable are free from conflict.
+     - atomic v.s. critical [39]
+  4. Example - parallel pi program
+- Memory Consistency and flush
+  1. flush [40, 41, 42, 43]
+- Data environment
+  1. stack and heap [44]
+     - In a multi-threaded situation each thread will have its own completely independent stack,
+       - so the threads will copy the stack variables but they will share the heap variables.
+  2. shared and private [45, 46, 47]
+  3. firstprivate(x) [48]
+     - initializes each private copy with the corresponding value from the master thread
+  4. lastprivate(x) [49]
+     - passes the value of a private from the last thread to a global variable.
+  5. reduction [50, 51]
+     - ``` # pragma omp parallel for reduction(+:x) default (shared) ```
+       - add will initialize x with default 0
+       - perform add in each thread
+       - and add all threads' results and global variable to global variable
+- Dijkstra algorithm [52, 53, 54, 55]
 ## 04
 
 ## 05
