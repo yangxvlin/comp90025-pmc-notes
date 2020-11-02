@@ -163,7 +163,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     for i in range (0, p):
         A[i] = (i, w[i], False) # (index, address, whether we are allowed to write)
         
-    sort(A, lambda = \x, y, z -> cmp y, then cmp x then ) # Sort by address W[i] then id[i]
+    sort(A, lambda = \x, y, z -> cmp y, then cmp x then, increase=True) # Sort by address W[i] then id[i]
 
     for i in range (0, p):
         if i == 0:  # Lowest id for the smallest address always wins
