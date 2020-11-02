@@ -653,8 +653,101 @@ thread is allowed to continue beyond the barrier
   - Tree Termination Algorithm [59]
   - Fixed Energy Distribution Termination [60]
 - Navier-Stokes equation [61-63]
-## 08
+## 08 cuda
 
-## 09
+## 09 interconnection
 
-## 10
+## 10 systolic
+- Different from PRAM model
+  - no shared memory between processors
+  - <img width="70%" src="docs/3.jpg"/>
+- Different from cuda
+- Systolic algorithms consider the flow of data through an array of processing elements. 
+- The processing elements themselves do not have access to any global memory, 
+  - but rather just to values from adjacent processing elements.
+- Processing elements 
+  - read from their input buffers and local memory, 
+  - undertake some computation and 
+  - write results to their output buffers.
+  - Output buffers are copied across to the input buffers of adjacent processing elements.
+  - <img width="76%" src="docs/2.png"/>
+- Granularity: good
+  - little work for each synchronization and communication step
+- Sort on a systolic linear array
+  - <img width="76%" src="docs/4.jpg"/>
+  - ```
+    update_cell(input, ouput)
+        if local == NULL:
+            local = input
+        else if input >= cell:
+            output = input
+        else # input < local:
+            output = local
+            local = input
+    ```
+  - speedup = O(log n)
+    - T(n) = O(n log n)
+    - t(n) = O(n)
+- Matrix-vector multiplication
+  - <img width="76%" src="docs/5.jpg"/>
+  - ```
+    update_cell(input_x, input_A, ouput)
+        if local == NULL:
+            local = 0
+        local += input_x * input_A 
+        output = input_x
+    ```
+    - speedup = O(n)
+    - T(n) = O(n^2)
+    - t(n) = O(n)
+- Matrix-matrix multiplication
+  - <img width="76%" src="docs/6.jpg"/>
+  - ```
+    update_cell(input_A, input_B, ouput_x, output_y)
+        if local == NULL:
+            local = 0
+        local += input_A * input_B
+        output_x = input_B
+        output_y = input_A
+    ```
+    - speedup = O(n^2)
+    - T(n) = O(n^3)
+    - t(n) = 2n - 1 = O(n)
+      - n parallel steps, n: number of cells
+        - n for first element to arrive last processor
+        - n-1 for last arrive first element's position in matrix's row/columns
+        - n-1 for padding (possible)
+- Prefix sum on a systolic linear array
+  - <img width="36%" src="docs/7.jpg"/>
+  - ```
+    update_cell(input, ouput)
+        if local == NULL:
+            local = 0
+        local += input
+        output = input
+    ```
+    need to reverse the array at the end
+  - aviod reverse
+    - ```
+      local = (stored value, #elements seen)
+            = (Null, 0)
+  
+      update_cell(input, ouput)
+          seen = (snd local) + 1
+          
+          # seen == 1
+          if (fst local) == NULL:
+              local = (input, seen)
+              output = NULL
+              return
+          
+          local = (fst local, seen)
+          
+          if seen == 2:
+              output = input + (fst local)
+          else if seen > 2:
+              output = input
+      ```
+   - speedup = O(1)
+      - T(n) = O(n)
+      - t(n) = O(n)
