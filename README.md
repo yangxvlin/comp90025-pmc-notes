@@ -56,7 +56,8 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
 - Power of PRAM model variations
   - The models are listed in increasing order of "power":
     1. any algorithm that runs on a EREW PRAM will run on a CREW PRAM,
-    2. any algorithm that runs on a CREW PRAM will run on a COMMON CRCW PRAM, and so on.  
+    2. any algorithm that runs on a CREW PRAM will run on a COMMON CRCW PRAM, and so on. 
+    3. [Small PRAMs can simulate larger PRAMs](http://pages.cs.wisc.edu/~tvrdik/2/html/Section2.html#Simulation1) 
     - However it is not true in the other direction.
       - impossible example [44]
   - Any algorithm for a CRCW PRAM in the PRIORITY model 
@@ -64,6 +65,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       - an EREW PRAM with the same number of processors  
         and 
       - with the parallel time increased by only a factor of O(log p).
+    - { EREW SimulatePriority }
   - Any algorithm for a PRIORITY PRAM 
     - can be simulated by
       - a COMMON PRAM with no loss in parallel time  
@@ -409,10 +411,92 @@ thread is allowed to continue beyond the barrier
        - perform add in each thread
        - and add all threads' results and global variable to global variable
 - Dijkstra algorithm [52, 53, 54, 55]
-## 04
+## 04a communication
+- Time to send a message: t_m
+  - t_m = t_f + t_b * l
+    - t_f = a fixed time
+    - t_b = a time per byte
+    - l = number of bytes in the message
+  - efficient message passing = t_b * l >> t_f
+- Parallel run time: t_p
+  - t_p = t_comp + t_comm
+    - t_comp: computation time
+    - t_comm: communication time
+  - speedup: S
+    - S = t_s / t_p
+      - t_s: sequential time
+- Delay hiding [6]
+  - = when t_p not valid?
+  - Communication and computation can happen at the same time
+  - Part of the art of parallel programming is making sure that all processors/processes have enough data to keep them busy
+- Granularity [7]
+  - granularity = t_comp / t_comm
+  - tradeoff between parallelism and communication
+- Communication primitives [8]
+  - what are the basic tasks happen when send data
+- send() and receive() [9, 10]
+  - send/receive(destination identifier, message type, data type and contents)
+  - blocking or or local-blocking non-blocking [11, 12, 13, 14]
+    - non-blocking(): send will keep sending in the background
+    - non-blocking(): receive will typically return whatever data has been received so far, and indicate to the caller how much has been read [15]
+  - Blocking and non-blocking connote (意味着) synchronous and asynchronous communication. [16]
+- Communication patterns [17-26]
+  - Why we need communication pattern?
+    - Distributed memory architectures require message passing and this in turn leads to communication patterns.
+    - Shared memory parallel programs don’t explicitly use communication patterns
+    - Distributed shared memory architecture needs
+## 04b OpenMPI
 
-## 05
+## 05 prefix sum
+- sequential prefix sum (or other dyadic operation)
+  - |||
+    |---|---|
+    |input size|n
+    |T(n)|O(n)
+  - ```
+    int X[n];
+    for(i=1; i<n; i++) {
+        X[i] = X[i-1] + X[i];
+    }
+    ```
+- Suboptimal CREW Upper/Lower parallel prefix algorithm [6]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log n)
+    |p(n)|p = n
+    |T(n)|O(n)
+  - can use { Optimal EREW Broadcast } to make CREW to EREW for operation on line 12
+- Suboptimal EREW Odd/Even parallel prefix algorithm [12, 13]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log n)
+    |p(n)|p = n
+    |T(n)|O(n)
+- Optimal EREW Prefix sum
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log n)
+    |p(n)|p = n / log n
+    |T(n)|O(n)
+  - ```
+    input[n]
+    # do sequential prefix sum on sub-array size=log(n) in parallel
+    # O(n/p) = O(log n) steps
+    for processor_i in range(0, p) do in parallel:
+        for j in range(ceil( i * (n/p) ) + 1, ceil( (i+1) * (n/p) ) :  # +1 as first element in subarray doesn't need to be prefixed
+            input[j] += input[j-1]
 
+    # O(p) steps
+    for k in range(1, p):
+        last <- input[ceil(k * (n/p)) - 1]  # take sub-array (k-1)'s last prefix sum
+
+        # O(1) step
+        for processor_i in range(0, p) do in parallel:
+            input[ceil(k*p) + i] += last  # update previous subarray's prefix to cur subarray
+    ```
 ## 06
 
 ## 07
