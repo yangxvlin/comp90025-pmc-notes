@@ -617,8 +617,42 @@ thread is allowed to continue beyond the barrier
 
 ## 06
 
-## 07
-
+## 07 parallel algorithm techniques
+- Algorithms can be loosely classified as 1+ of:
+  - embarrassingly parallel
+  - parametric
+  - data parallel
+  - task parallel
+  - loosely synchronous
+  - synchronous
+- Geometric transformations of images [3]
+- Shifting [4]
+- Scaling [5]
+- Rotation [6]
+- Clipping [7]
+- Image smoothing [8]
+- Partitioning [9-11]
+- Mandelbrot Set [12-14]
+- Dynamic Load Balancing [15]
+- Monte Carlo Methods [16-19]
+- N-Body Problem [20-29]
+  - Barnes-Hut Algorithm [30-33]
+  - Orthogonal recursive bisection [34]
+- Jacobi iteration [36]
+- Laplace’s equation [37-44]
+  - Gauss-Seidel relaxation [45]
+  - Red-Black ordering [46-47]
+  - Multi-grid technique [48]
+- Termination
+  - Centralised Program Termination [50]
+  - Decentralised Program Termination [51]
+    - Acknowledgement Messages [52-54]
+  - Ring Termination Algorithm [55]
+    - single pass [56, 58]
+    - dual pass [57-58]
+  - Tree Termination Algorithm [59]
+  - Fixed Energy Distribution Termination [60]
+- Navier-Stokes equation [61-63]
 ## 08
 
 ## 09
