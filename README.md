@@ -69,7 +69,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       - a COMMON PRAM with no loss in parallel time  
        and
       - provided sufficiently many processors are available.
-### algorithm
+### EREW algorithm
 - Suboptimal EREW Lambda
   - |||
     |---|---|
@@ -96,22 +96,6 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       |p(n)|p = n/log n
       |T(n)|O(n)
     - optimal EREW pattern (1)
-- Optimal COMMON Logical_OR [44]
-  - |||
-    |---|---|
-    |input size|n
-    |t(n)|O(n/p) steps
-    |p(n)|n
-    |T(n)|O(n^2)
-  - optimal EREW pattern (1)
-    - no O(log p) because we use localVar instead of localArr (no race condition beacuse we have COMMON), so no parallelize reduce just return
-- Suboptimal COMMON Maximum [47]
-  - |||
-    |---|---|
-    |input size|n^2
-    |t(n)|O(log log n) steps
-    |p(n)|n^2
-    |T(n)|O(n)
 - Optimal EREW Maximum
   - |||
     |---|---|
@@ -119,7 +103,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     |t(n)|O(n/p + log n) <br /> = O(log n / n + log n^2 - log log n) steps by substitute in p(n) <br /> = O(log n / n + 2 log n) steps <br /> = O(log n) steps
     |p(n)|p = n^2/log n
     |T(n)|O(n^2)
-   - optimal EREW pattern
+   - optimal EREW pattern (1)
    - ```
      # initialize
      B[p]
@@ -135,8 +119,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
      #   in O(log p) steps with p/2 processors
      return Suboptimal EREW Lambda=Max (input = B, input size = p)
      ```
-- TODO Slide 50
-### optimal EREW pattern
+#### optimal EREW pattern
 - (1)
   - ```
       Input: array
@@ -145,8 +128,50 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       for each processor_i: 
           sequentially cal subarray to localArr[i]
       
+      # parallel reduce
       parallelize reducing localArr to finalResult by Suboptimal EREW algorithm (LAMBDA)
       ```
+### COMMON algorithm
+- Optimal COMMON Logical_OR [44]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(n/p) steps
+    |p(n)|n
+    |T(n)|O(n^2)
+  - similar to optimal EREW pattern (1)
+    - except no O(log p) because we use localVar instead of localArr (no race condition beacuse we have COMMON), so no parallelize reduce just return
+- Suboptimal COMMON Maximum [47]
+  - |||
+    |---|---|
+    |input size|n^2
+    |t(n)|O(log log n) steps
+    |p(n)|n^2
+    |T(n)|O(n)
+### PRIORITY algorithm
+- Optimal PRIORITY ElementUnique
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(1) steps
+    |p(n)|n
+    |T(n)|O(n)
+#### optimal Priority pattern
+- (1)
+  - ```
+      Input: array
+      initialize localArr[p], localVar
+
+      for each processor_i:
+        localArr[input[i]] <- i  # As PRIORITY, only lowest i will be written
+
+      for each processor_i: 
+        if localArr[input[i]] != i:  # implies other processor has duplicate value
+          change localArr
+      
+      return localArr
+      ```
+
 
 ## 02 
 
