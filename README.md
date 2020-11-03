@@ -742,7 +742,29 @@ thread is allowed to continue beyond the barrier
 - Navier-Stokes equation [61-63]
 ## 08 cuda
 
-## 09 interconnection
+## 09 interconnection network
+- why we need it?
+  - Both the shared memory and distributed memory architectures **require an interconnection network to** connect the processor and memory or the modules respectively.
+- Types:
+  - buses
+    - b: #buses
+    - m: #memories
+    - p: #processors
+    - |Multi-bus systems||connections||
+      |---|---|---|---|
+      |full b-bus memory connection system|[3]|b(p+m)
+      |partial b-bus memory connection system|[4]|b(p+m/g), 1<g<b
+      |single b-bus memory connection system|[5]|bp+m|each processor has connection to a memory, but one can write at each time
+    - bandwidth O(1/p)
+      - all p nodes on a bus are continuously requesting access then a bus can supply O(1/p) of its available bandwidth to each node.
+    - minimum latency O(1) for each bus
+      - with no contention, is constant or O(1) (which ignores signal propagation delay)
+  - static networks (point-to-point networks)
+    - 
+  - switching networks
+
+
+
 
 - TODO hypercube prefix sum
   - [link](https://www8.cs.umu.se/kurser/5DV050/VT11/lab1.pdf)
