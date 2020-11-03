@@ -13,6 +13,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     - [COMMON algorithm](#common-algorithm)
     - [PRIORITY algorithm](#priority-algorithm)
       - [optimal Priority pattern](#optimal-priority-pattern)
+    - [COMBINE algorithm](#combine-algorithm)
   - [02 architecture](#02-architecture)
   - [03 OpenMP](#03-openmp)
   - [04a communication](#04a-communication)
@@ -226,45 +227,44 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       # input: input array
       # n: size of input array
       # p: number of processors
-      Optimal EREW second_largest(input, n, p) 
+      Optimal EREW second_largest(input, n, p):
+          if n <= 2:
+              return max(input[0], input[1])
 
-      if n <= 2:
-          return max(input[0], input[1])
+          initialize M[p], m[p]; # M for largest, m for second largest
+          # O(1) step
+          do in p processors for i from 0 to p-1:
+              M[i] = INT_MIN
+              m[i] = INT_MIN
 
-      initialize M[p], m[p]; # M for largest, m for second largest
-      # O(1) step
-      do in p processors for i from 0 to p-1:
-          M[i] = INT_MIN
-          m[i] = INT_MIN
+          # sequential find second largest in subarray
+          # O(n/p) steps
+          do in p processors for i from 0 to p-1:
+              for j from ceil(n/p)*i to ceil(n/p)*(i+1) - 1:
+                  if input[j] >= M[i]:
+                      m[i] = M[i]
+                      M[i] = input[j]
 
-      # sequential find second largest in subarray
-      # O(n/p) steps
-      do in p processors for i from 0 to p-1:
-          for j from ceil(n/p)*i to ceil(n/p)*(i+1) - 1:
-              if input[j] >= M[i]:
-                  m[i] = M[i]
-                  M[i] = input[j]
-
-      m1, m2 = INT_MIN, INT_MIN # intended m1 > m2
-      # O(p) steps
-      for i from 0 to p-1:
-          # M[i] >= m[i] >= m1 >= m2
-          if m[i] >= m1:
-              m1, m2 = M[i], m[1]
-          else if M[i] >= m1:
-              # M[i] >= m1 >= m[i] >= m2
-              if m[i] > m2:
-                  m2 = m[i]
-              # M[i] >= m1 >= m2 >= m[i]
-              else:
-                  m2 = m1
-              m1 = M[i]
-          # m1 >= M[i] >= m2 >= m[i] or m1 >= M[i] >= m[i] >= m2
-          else if M[i] > m2:
-              m2 = M[i]
-      
-      return m2
-      # work = t(n) * p(n) = O(sqrt(n)) * O(sqrt(n)) = O(n) = T(n), so it is optimal
+          m1, m2 = INT_MIN, INT_MIN # intended m1 > m2
+          # O(p) steps
+          for i from 0 to p-1:
+              # M[i] >= m[i] >= m1 >= m2
+              if m[i] >= m1:
+                  m1, m2 = M[i], m[1]
+              else if M[i] >= m1:
+                  # M[i] >= m1 >= m[i] >= m2
+                  if m[i] > m2:
+                      m2 = m[i]
+                  # M[i] >= m1 >= m2 >= m[i]
+                  else:
+                      m2 = m1
+                  m1 = M[i]
+              # m1 >= M[i] >= m2 >= m[i] or m1 >= M[i] >= m[i] >= m2
+              else if M[i] > m2:
+                  m2 = M[i]
+          
+          return m2
+          # work = t(n) * p(n) = O(sqrt(n)) * O(sqrt(n)) = O(n) = T(n), so it is optimal
       ```
 #### optimal EREW pattern
 - (1)
@@ -344,7 +344,22 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       
       return localArr
       ```
+### COMBINE algorithm
+- COMBINE substring occurance
+  - > [2018s2 Q7a 10marks] Consider the problem of counting the number of times a string of length m occurs in a string of length n > m. For example, for the string ABC of length m = 3 it occurs 3 times in the string AJ**ABC**DF**ABC**ASD**ABC**KALD of length n = 20.  
+  A naive sequential solution can be done in O(mn) time steps.
+    - > (a) Show how to solve the problem in constant time using a Combining CRCW PRAM with O(mn) processors.
+  - |||
+    |---|---|
+    |input size|m, n, n > m
+    |t(n)|O(m n) steps
+    |p(n)|O(1)
+    |T(n)|O(mn)
+  - ```
+    COMBINE CRCW substring_occurance(string, n, substring, m)
 
+
+    ```
 
 ## 02 architecture
 - PE: processing element
