@@ -795,6 +795,18 @@ thread is allowed to continue beyond the barrier
       |fat tree|[24]
       |K-ary fat tree|[25]
   - switching networks
+    - switch  
+      <img width="70%" src="./docs/9.jpg"/>
+    - With switching networks, the hardare cost is no longer proportional to the degree d. 
+      - Instead, we measure the **complexity = the number of switching elements**
+    - n = number of inputs and outputs
+      |switch network||complexity|latency|other
+      |---|---|---|---|---|
+      |crossbar|[27]|O(n^2)|O(1)<br/>any 1-to-1 mapping of inputs to outputs is possible|= n-bus with single bus memory connections|
+      |Clos|[28-30]|< O(n^2)
+      |Benes|[31]|n log2 n - n/2 <br/>= O(n log n)|O(1)|= Clos with m=n=2
+      |Omega|[32]|n/2 * log2 n <br/>=  O(n log n)|O(n log n)|some 1-to-1 I/O mappings require up to log n phases to be realized
+
 - TODO hypercube prefix sum
   - [link](https://www8.cs.umu.se/kurser/5DV050/VT11/lab1.pdf)
   - [2019 L[Hypercube and Embeddings]]()
