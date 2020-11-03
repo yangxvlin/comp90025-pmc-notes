@@ -16,6 +16,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
   - T(n) ≤ size(n) ≤ w(n) 
   - prove at [24]
 - Brent's Principle: proof and def [26]
+  - <img width="60%" src="./docs/11.jpg"/>
   - used to infer the best running time for a parallel algorithm that runs with a given size.
 - Optimality: def [27]
   - A PRAM algorithm is optimal if ...
