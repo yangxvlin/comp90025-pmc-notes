@@ -213,6 +213,58 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
         else:
             Discard write operation
     ```
+- Optimal EREW second largest
+  > [2018s2 Q4 5marks] Consider the problem of finding the second largest number in an array of n numbers. Write an optimal EREW PRAM algorithm that does so. Show that your algorithm is optimal.
+    - |||
+      |---|---|
+      |input size|n
+      |t(n)|O(n / p + p) = O(sqrt(n) + sqrt(n)) = O(sqrt(n)) steps
+      |p(n)|p = ceil(sqrt(n))
+      |T(n)|O(n)
+    - ```
+      # input: input array
+      # n: size of input array
+      # p: number of processors
+      Optimal EREW second_largest(input, n, p) 
+
+      if n <= 2:
+          return max(input[0], input[1])
+
+      initialize M[p], m[p]; # M for largest, m for second largest
+      # O(1) step
+      do in p processors for i from 0 to p-1:
+          M[i] = INT_MIN
+          m[i] = INT_MIN
+
+      # sequential find second largest in subarray
+      # O(n/p) steps
+      do in p processors for i from 0 to p-1:
+          for j from ceil(n/p)*i to ceil(n/p)*(i+1) - 1:
+              if input[j] >= M[i]:
+                  m[i] = M[i]
+                  M[i] = input[j]
+
+      m1, m2 = INT_MIN, INT_MIN # intended m1 > m2
+      # O(p) steps
+      for i from 0 to p-1:
+          # M[i] >= m[i] >= m1 >= m2
+          if m[i] >= m1:
+              m1, m2 = M[i], m[1]
+          else if M[i] >= m1:
+              # M[i] >= m1 >= m[i] >= m2
+              if m[i] > m2:
+                  m2 = m[i]
+              # M[i] >= m1 >= m2 >= m[i]
+              else:
+                  m2 = m1
+              m1 = M[i]
+          # m1 >= M[i] >= m2 >= m[i] or m1 >= M[i] >= m[i] >= m2
+          else if M[i] > m2:
+              m2 = M[i]
+      
+      return m2
+      # work = t(n) * p(n) = O(sqrt(n)) * O(sqrt(n)) = O(n) = T(n), so it is optimal
+      ```
 #### optimal EREW pattern
 - (1)
   - ```
@@ -738,7 +790,7 @@ thread is allowed to continue beyond the barrier
     |---|---|---|
     |embarrassingly parallel|first three are pretty overlap. break massive data (can't be solved on one supercomputer) to several independent pieces and processed. Thus get parallelism so easily|grid computing
     |parametric|first three are pretty overlap. A parametric problem is a data parallel problem. Divide problem based on a parameter space (parameter space can be very large). You have a parameter define the problem space and values for a given set of parameters define one instance of the computation can be done independently.
-    |data parallel|first three are pretty overlap. easy to break down to disjoint piece that can be distributed to different process and done independent. Results are put together afterwards
+    |data parallel|first three are pretty overlap. easy to break down to disjoint piece that can be distributed to different process and done independently. Results are put together afterwards
     |task parallel|have different computing done for different task. like a pipline (different stage of computation, you get parallelism because you run various instance of the problem concurrently)|dynamic loading
     |loosely synchronous|synchronize within a group of nodes in the system or a subset tasks of total tasks.|Red-Black ordering
     |synchronous|refer to problem reuqire a lot of communication. typically, require communication at the end of each step. you might need a barrier. granularity needs to be large which might makes you not get speedup|N-body
@@ -796,11 +848,14 @@ thread is allowed to continue beyond the barrier
         - for processors to communicate (in a message passing machine).
       - Communication module [8]  
         <img width="50%" src="./docs/8.jpg"/>
+    - > [2018S2 Q1d 4marks]  Define the diameter and degree of a static interconnection network.  
+        Explain why these two properties are important from a parallel computer architecture perspective and explain the tradeoff between them.
+        - They are important because of the cost = degree * diameter. It is desirable to achieve a low cost. Consequently, small degree and diameter at the same time is desirable. The tradeoff is a decreasing degree might an increasing diameter which is the tradeoff. As a result, we need to find a balance between them to achieve a low cost.
     - |Topological property|def|when useful
       |---|---|---|
       |degree/cost to build|d = maximum number of edges connected to a single vertex in the graph
       |diameter/communication delay|k = the minimum number of edges a message must traverse in order to be communicated between any two vertices in the graph
-      |cost|c = d*k|a compromise between d and k<br />the smaller, the better
+      |cost|c = d*k|a compromise between d and k<br />it is desirable to achieve a low cost for static network
       |||
       |(edge) bisection width|smallest number of edges that, when cut, would separate the network into two halves|useful for reliability
       |planarity|Can the network be embedded in a plane without any edges crossing|useful for integrated circuits as it eliminates the need for multiple layers = 简化physical建造的难度
