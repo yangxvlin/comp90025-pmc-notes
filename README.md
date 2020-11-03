@@ -266,6 +266,38 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
           return m2
           # work = t(n) * p(n) = O(sqrt(n)) * O(sqrt(n)) = O(n) = T(n), so it is optimal
       ```
+- EREW substring occurance
+  - > [2018s2 Q7 10marks] Consider the problem of counting the number of times a string of length m occurs in a string of length n > m. For example, for the string ABC of length m = 3 it occurs 3 times in the string AJ**ABC**DF**ABC**ASD**ABC**KALD of length n = 20.  
+  A naive sequential solution can be done in O(mn) time steps.
+    - > (b) Show how to solve the problem on an EREW PRAM with O(n) processors in a lower time complexity than the naive sequential solution, i.e. o(mn), and show what that complexity is.
+  - |||
+    |---|---|
+    |input size|m, n, n > m
+    |t(n)|O() steps
+    |p(n)|O(n)
+    |T(n)|O(mn)
+  - ```
+    EREW substring_occurance(string, n, substring, m)
+        initialize occured[n]
+
+        # O(1) step
+        do in n processors with ordering (i, j) where 0<=i<=n, 0<=j<=m:
+            # m-1 to ensure enough characters in string[a..a+m]
+            do in processors (a, 1) for a from 0 to n-(m-1)-1: 
+                occured[a] = True
+                do in processors (a, b) for b from 0 to m-1:
+                    if string[a+b] != substring[b]:
+                        combine_bool_and(occured[a], False)
+            do in processors (a, 1) for a from n-(m-1) to n-1: 
+                occured[a] = False
+        
+        res = 0        
+        # O(1) step
+        do in processors (a, 1) for a from 0 to n-(m-1)-1:
+            combine_int_add(res, convert(occured[a]))
+        
+        return res
+    ```
 #### optimal EREW pattern
 - (1)
   - ```
@@ -352,8 +384,8 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
   - |||
     |---|---|
     |input size|m, n, n > m
-    |t(n)|O(mn) steps
-    |p(n)|O(1)
+    |t(n)|O(1) steps
+    |p(n)|O(mn)
     |T(n)|O(mn)
   - ```
     combine_bool_and(a, b) = write (a && b) to a
@@ -368,11 +400,11 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
             # m-1 to ensure enough characters in string[a..a+m]
             do in processors (a, 1) for a from 0 to n-(m-1)-1: 
                 occured[a] = True
-                do in processors (a, b) for b from 0 to m-1:
-                    if string[a+b] != substring[b]:
-                        combine_bool_and(occured[a], False)
-            do in processors (a, 1) for a from n-(m-1) to n-1: 
-                occured[a] = False
+            do in processors (a, b) 
+              for a from 0 to n-(m-1)-1: 
+                  for b from 0 to m-1:
+                      if string[a+b] != substring[b]:
+                          combine_bool_and(occured[a], False)
         
         res = 0        
         # O(1) step
