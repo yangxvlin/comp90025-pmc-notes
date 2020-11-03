@@ -215,6 +215,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     ```
 - Optimal EREW second largest
   > [2018s2 Q4 5marks] Consider the problem of finding the second largest number in an array of n numbers. Write an optimal EREW PRAM algorithm that does so. Show that your algorithm is optimal.
+    - [link](https://cs.stackexchange.com/a/64313)
     - |||
       |---|---|
       |input size|n
