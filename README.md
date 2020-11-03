@@ -778,20 +778,20 @@ thread is allowed to continue beyond the barrier
     - n vertices  
       |network||d|k|c = d*k|bisection|planarity|symmetric|disadv
       |---|---|---|---|---|---|---|---|---|
-      |linear array|[12]|2|O(n)|O(n)
+      |linear array|[12]|2|O(n)|O(n)|1|y
       |||||||||
-      |ring|[13]|2|floor(n/2)<br/>= half of the ring|O(n)
+      |ring|[13]|2|floor(n/2)<br/>= half of the ring|O(n)|2|y
       |chordal ring|[14]|3|n/3|O(n)
       |completely connected|[16]|n-1|1|O(n)
-      |Barrel shifter, t = log2 n|[17]|2t-1|t/2|O(t^2)<br />= O((log2 n)^2)|good|no (bad)
+      |Barrel shifter, t = log2 n|[17]|2t-1|t/2|O(t^2)<br />= O((log2 n)^2)|good|
       |||||||||
-      |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j||yes
-      |torus|[19]|4|sqrt(n)+1|O(sqrt(n))|||yes
+      |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j||y
+      |torus|[19]|4|sqrt(n)+1|O(sqrt(n))|||y
       |||||||||
       |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|
       |Cube Connected Cycles<br/>n = t 2^t<br/>t = O(log n/ log log n)|[21]|3|2t + floor(t/2) - 2, t>3|**O(t) = O(log n/ log log n)**|
       |||||||||
-      |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||||traffic on top nodes are busy
+      |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||y||traffic on top nodes are busy
       |fat tree|[24]
       |K-ary fat tree|[25]
   - switching networks
