@@ -1,6 +1,33 @@
 # comp90025-pmc-notes
 COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary sheet
 
+<!-- TOC -->
+
+- [comp90025-pmc-notes](#comp90025-pmc-notes)
+  - [terminology](#terminology)
+  - [01 introduction](#01-introduction)
+    - [definition](#definition)
+    - [PRAM](#pram)
+    - [EREW algorithm](#erew-algorithm)
+      - [optimal EREW pattern](#optimal-erew-pattern)
+    - [COMMON algorithm](#common-algorithm)
+    - [PRIORITY algorithm](#priority-algorithm)
+      - [optimal Priority pattern](#optimal-priority-pattern)
+  - [02 architecture](#02-architecture)
+  - [03 OpenMP](#03-openmp)
+  - [04a communication](#04a-communication)
+  - [04b OpenMPI](#04b-openmpi)
+  - [05 prefix sum](#05-prefix-sum)
+    - [Pointer jumping](#pointer-jumping)
+  - [06 sort and merge](#06-sort-and-merge)
+  - [07 parallel algorithm techniques](#07-parallel-algorithm-techniques)
+  - [08 cuda](#08-cuda)
+  - [09 interconnection network](#09-interconnection-network)
+    - [static netwrok algorithm](#static-netwrok-algorithm)
+  - [10 systolic](#10-systolic)
+
+<!-- /TOC -->
+
 ## terminology
 - knowledge [location in xuliny's lecture slide]
 - {xxx} link current knowledge with xxx (you can just search xxx in this document)
