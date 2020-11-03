@@ -273,30 +273,53 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
   - |||
     |---|---|
     |input size|m, n, n > m
-    |t(n)|O() steps
+    |t(n)|O(log n) steps
     |p(n)|O(n)
     |T(n)|O(mn)
   - ```
     EREW substring_occurance(string, n, substring, m)
-        initialize occured[n]
+        # KMP: https://www.geeksforgeeks.org/kmp-algorithm-for-pattern-searching/
+        # KMP has O(n) wotst case
 
-        # O(1) step
-        do in n processors with ordering (i, j) where 0<=i<=n, 0<=j<=m:
-            # m-1 to ensure enough characters in string[a..a+m]
-            do in processors (a, 1) for a from 0 to n-(m-1)-1: 
-                occured[a] = True
-                do in processors (a, b) for b from 0 to m-1:
-                    if string[a+b] != substring[b]:
-                        combine_bool_and(occured[a], False)
-            do in processors (a, 1) for a from n-(m-1) to n-1: 
-                occured[a] = False
+        // create lps[] that will hold the longest prefix suffix values for pattern
+        initialize lps[n], match[n]
+        // Preprocess the pattern (calculate lps[] array) 
+        computeLPSArray(string, n, lps)
+
+        // O(1)
+        do in processors for i from 0 to n-1:
+            match[n] = 0
+
+        int i = 0; // index for substring[] 
+        int j = 0; // index for string[] 
+        while (i < m) { 
+            if (string[j] == substring[i]) { 
+                j++; 
+                i++; 
+            } 
+      
+            if (j == n) { 
+                // Found substring at index i - j
+                match[i-j] = 1
+
+                j = lps[j - 1]; 
+            } 
+      
+            // mismatch after j matches 
+            else if (i < m && string[j] != substring[i]) { 
+                // Do not match lps[0..lps[j-1]] characters, 
+                // they will match anyway 
+                if (j != 0) 
+                    j = lps[j - 1]; 
+                else
+                    i = i + 1; 
+            } 
+        }
+
+        # O(log n)
+        Optimal EREW Prefix sum on match with ceil(n / log n) processors
         
-        res = 0        
-        # O(1) step
-        do in processors (a, 1) for a from 0 to n-(m-1)-1:
-            combine_int_add(res, convert(occured[a]))
-        
-        return res
+        return match[n-1]
     ```
 #### optimal EREW pattern
 - (1)
