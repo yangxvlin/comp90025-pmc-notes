@@ -356,9 +356,9 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     |p(n)|O(1)
     |T(n)|O(mn)
   - ```
-    combine_bool_and(a, b) = store (a && b) to a
+    combine_bool_and(a, b) = write (a && b) to a
     convert(a) = if a == True then 1 else 0
-    combine_int_add(a, b) = store (a + b) to a
+    combine_int_add(a, b) = write (a + b) to a
 
     Optimal COMBINE CRCW substring_occurance(string, n, substring, m)
         initialize occured[n]
@@ -369,7 +369,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
             do in processors (a, 1) for a from 0 to n-(m-1)-1: 
                 occured[a] = True
                 do in processors (a, b) for b from 0 to m-1:
-                    if string[a] != substring[b]:
+                    if string[a+b] != substring[b]:
                         combine_bool_and(occured[a], False)
             do in processors (a, 1) for a from n-(m-1) to n-1: 
                 occured[a] = False
