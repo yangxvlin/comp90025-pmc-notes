@@ -346,7 +346,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       ```
 ### COMBINE algorithm
 - Optimal COMBINE substring occurance
-  - > [2018s2 Q7a 10marks] Consider the problem of counting the number of times a string of length m occurs in a string of length n > m. For example, for the string ABC of length m = 3 it occurs 3 times in the string AJ**ABC**DF**ABC**ASD**ABC**KALD of length n = 20.  
+  - > [2018s2 Q7 10marks] Consider the problem of counting the number of times a string of length m occurs in a string of length n > m. For example, for the string ABC of length m = 3 it occurs 3 times in the string AJ**ABC**DF**ABC**ASD**ABC**KALD of length n = 20.  
   A naive sequential solution can be done in O(mn) time steps.
     - > (a) Show how to solve the problem in constant time using a Combining CRCW PRAM with O(mn) processors.
   - |||
