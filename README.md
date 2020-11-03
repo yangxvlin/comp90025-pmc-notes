@@ -345,20 +345,41 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
       return localArr
       ```
 ### COMBINE algorithm
-- COMBINE substring occurance
+- Optimal COMBINE substring occurance
   - > [2018s2 Q7a 10marks] Consider the problem of counting the number of times a string of length m occurs in a string of length n > m. For example, for the string ABC of length m = 3 it occurs 3 times in the string AJ**ABC**DF**ABC**ASD**ABC**KALD of length n = 20.  
   A naive sequential solution can be done in O(mn) time steps.
     - > (a) Show how to solve the problem in constant time using a Combining CRCW PRAM with O(mn) processors.
   - |||
     |---|---|
     |input size|m, n, n > m
-    |t(n)|O(m n) steps
+    |t(n)|O(mn) steps
     |p(n)|O(1)
     |T(n)|O(mn)
   - ```
-    COMBINE CRCW substring_occurance(string, n, substring, m)
+    combine_bool_and(a, b) = store (a && b) to a
+    convert(a) = if a == True then 1 else 0
+    combine_int_add(a, b) = store (a + b) to a
 
+    Optimal COMBINE CRCW substring_occurance(string, n, substring, m)
+        initialize occured[n]
 
+        # O(1) step
+        do in m*n processors with ordering (i, j) where 0<=i<=n, 0<=j<=m:
+            # m-1 to ensure enough characters in string[a..a+m]
+            do in processors (a, 1) for a from 0 to n-(m-1)-1: 
+                occured[a] = True
+                do in processors (a, b) for b from 0 to m-1:
+                    if string[a] != substring[b]:
+                        combine_bool_and(occured[a], False)
+            do in processors (a, 1) for a from n-(m-1) to n-1: 
+                occured[a] = False
+        
+        res = 0        
+        # O(1) step
+        do in processors (a, 1) for a from 0 to n-(m-1)-1:
+            combine_int_add(res, convert(occured[a]))
+        
+        return res
     ```
 
 ## 02 architecture
