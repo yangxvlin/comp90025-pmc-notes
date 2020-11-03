@@ -760,12 +760,37 @@ thread is allowed to continue beyond the barrier
     - minimum latency O(1) for each bus
       - with no contention, is constant or O(1) (which ignores signal propagation delay)
   - static networks (point-to-point networks)
-    - 
+    - = fixed point-to-point connections between modules
+    - Message passing is required between the modules 
+        - for any module to access the memory of any other module (for a shared addresss space machine) or
+        - for processors to communicate (in a message passing machine).
+      - Communication module [8]  
+        <img width="50%" src="./docs/8.jpg"/>
+    - |Topological property|def|when useful
+      |---|---|---|
+      |degree/cost to build|d = maximum number of edges connected to a single vertex in the graph
+      |diameter/communication delay|k = the minimum number of edges a message must traverse in order to be communicated between any two vertices in the graph
+      |cost|c = d*k|a compromise between d and k<br />the smaller, the better
+      |||
+      |(edge) bisection width|smallest number of edges that, when cut, would separate the network into two halves|useful for reliability
+      |planarity|Can the network be embedded in a plane without any edges crossing|useful for integrated circuits as it eliminates the need for multiple layers = 简化physical建造的难度
+      |symmetry|Are all nodes topologically the same
+    - n vertices  
+      |network||d|k|c = d*k|bisection|planarity|symmetric|disadv
+      |---|---|---|---|---|---|---|---|---|
+      |linear array|[12]|2|O(n)|O(n)
+      |ring|[13]|2|floor(n/2)<br/>= half of the ring|O(n)
+      |chordal ring|[14]|3|n/3|O(n)
+      |completely connected|[16]|n-1|1|O(n)
+      |Barrel shifter, t = log2 n|[17]|2t-1|t/2|O(t^2)<br />= O((log2 n)^2)|good|no (bad)
+      |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j||yes
+      |torus|[19]|4|sqrt(n)+1|O(sqrt(n))|||yes
+      |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|
+      |Cube Connected Cycles<br/>n = t 2^t<br/>t = O(log n/ log log n)|[21]|3|2t + floor(t/2) - 2, t>3|**O(t) = O(log n/ log log n)**|
+      |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||||traffic on top nodes are busy
+      |fat tree|[24]
+      |K-ary fat tree|[25]
   - switching networks
-
-
-
-
 - TODO hypercube prefix sum
   - [link](https://www8.cs.umu.se/kurser/5DV050/VT11/lab1.pdf)
   - [2019 L[Hypercube and Embeddings]]()
