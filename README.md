@@ -39,7 +39,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
   - feasible [33]
   - feasible highly parallel [33]
   - inherently sequential [33]
-  - Nick’s Class: def [34]
+  - Nick's Class: def [34]
 ### PRAM
 - PRAM [20]
 - 4 PRAM sub-categories [21]
@@ -446,7 +446,7 @@ thread is allowed to continue beyond the barrier
 - Communication patterns [17-26]
   - Why we need communication pattern?
     - Distributed memory architectures require message passing and this in turn leads to communication patterns.
-    - Shared memory parallel programs don’t explicitly use communication patterns
+    - Shared memory parallel programs don't explicitly use communication patterns
     - Distributed shared memory architecture needs
 ## 04b OpenMPI
 
@@ -727,7 +727,7 @@ thread is allowed to continue beyond the barrier
   - Barnes-Hut Algorithm [30-33]
   - Orthogonal recursive bisection [34]
 - Jacobi iteration [36]
-- Laplace’s equation [37-44]
+- Laplace's equation [37-44]
   - Gauss-Seidel relaxation [45]
   - Red-Black ordering [46-47]
   - Multi-grid technique [48]
