@@ -734,12 +734,14 @@ thread is allowed to continue beyond the barrier
 
 ## 07 parallel algorithm techniques
 - Algorithms can be loosely classified as 1+ of:
-  - embarrassingly parallel
-  - parametric
-  - data parallel
-  - task parallel
-  - loosely synchronous
-  - synchronous
+  - |||e.g.|
+    |---|---|---|
+    |embarrassingly parallel|first three are pretty overlap. break massive data (can't be solved on one supercomputer) to several independent pieces and processed. Thus get parallelism so easily|grid computing
+    |parametric|first three are pretty overlap. A parametric problem is a data parallel problem. Divide problem based on a parameter space (parameter space can be very large). You have a parameter define the problem space and values for a given set of parameters define one instance of the computation can be done independently.
+    |data parallel|first three are pretty overlap. easy to break down to disjoint piece that can be distributed to different process and done independent. Results are put together afterwards
+    |task parallel|have different computing done for different task. like a pipline (different stage of computation, you get parallelism because you run various instance of the problem concurrently)|dynamic loading
+    |loosely synchronous|synchronize within a group of nodes in the system or a subset tasks of total tasks.|Red-Black ordering
+    |synchronous|refer to problem reuqire a lot of communication. typically, require communication at the end of each step. you might need a barrier. granularity needs to be large which might makes you not get speedup|N-body
 - Geometric transformations of images [3]
 - Shifting [4]
 - Scaling [5]
