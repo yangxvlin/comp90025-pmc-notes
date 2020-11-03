@@ -22,7 +22,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
   - A PRAM algorithm is optimal if ...
 - Efficient: def [27]
 - Speedup = S(p) = T(n) / t(n) **(complexity)**
-    - def [28]: reduced the complexity of the problem by a factor of ...
+    - def [28]: reduced the complexity of the problem by a factor of S(p) by using the parallel algorithm
     - T(n) = the **best sequential complexity** for a given problem
     - t(n) = the **parallel complexity** of a given parallel algorithm
 - Speedup = ts / tp **(in wall-clock time)**
