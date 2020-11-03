@@ -806,11 +806,39 @@ thread is allowed to continue beyond the barrier
       |Clos|[28-30]|< O(n^2)
       |Benes|[31]|n log2 n - n/2 <br/>= O(n log n)|O(1)|= Clos with m=n=2
       |Omega|[32]|n/2 * log2 n <br/>=  O(n log n)|O(n log n)|some 1-to-1 I/O mappings require up to log n phases to be realized
-
-- TODO hypercube prefix sum
-  - [link](https://www8.cs.umu.se/kurser/5DV050/VT11/lab1.pdf)
-  - [2019 L[Hypercube and Embeddings]]()
-
+### static netwrok algorithm
+- Ring Broadcast
+  - [L2019 "Hypercube and Embeddings" 2]
+- Mesh broadcast
+  - [L2019 "Hypercube and Embeddings" 3-5]
+- Hybercube broadcast
+  - [L2019 "Hypercube and Embeddings" 3, 7]
+- Hypercube Sum and result stored in node 0 at the end
+  - [L2019 "Hypercube and Embeddings" 8-9]
+  - |||
+    |---|---|
+    |input size|n = 2^t
+    |t(n)|O(t) = O(log n) rounds
+- Hypercube Prefix Sum
+  - [L2019 "Hypercube and Embeddings" 10-12]
+  - |||
+    |---|---|
+    |input size|n = 2^t
+    |t(n)|O(t^2) = O(log^2 n) rounds
+- Optimal Hypercube Prefix Sum
+  - [pseudo code 1](https://www8.cs.umu.se/kurser/5DV050/VT11/lab1.pdf)
+  - pseudo code 2  
+    <img width="70%" src="./docs/10.jpg"/>
+  - |||
+    |---|---|
+    |input size|n = 2^t
+    |t(n)|O(t) = O(log n) rounds
+- Hypercube bitonic mergesort
+  - [L2019 "Hypercube and Embeddings" 17-18]
+  - |||
+    |---|---|
+    |input size|n = 2^t
+    |t(n)|O(t^2) = O(log^2 n) rounds
 ## 10 systolic
 - Different from PRAM model
   - no shared memory between processors
