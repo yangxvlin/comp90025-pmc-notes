@@ -16,6 +16,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
   - T(n) ≤ size(n) ≤ w(n) 
   - prove at [24]
 - Brent's Principle: proof and def [26]
+  - used to infer the best running time for a parallel algorithm that runs with a given size.
 - Optimality: def [27]
   - A PRAM algorithm is optimal if ...
 - Efficient: def [27]
@@ -60,7 +61,7 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
     3. [Small PRAMs can simulate larger PRAMs](http://pages.cs.wisc.edu/~tvrdik/2/html/Section2.html#Simulation1) 
     - However it is not true in the other direction.
       - impossible example [44]
-  - Any algorithm for a CRCW PRAM in the PRIORITY model 
+  - Any algorithm for a CRCW PRAM in the PRIORITY (COMMON/ARBITRARY/COMBINE) model 
     - can be "simulated" by 
       - an EREW PRAM with the same number of processors  
         and 
@@ -524,6 +525,7 @@ thread is allowed to continue beyond the barrier
     |t(n)|O(log n)
     |p(n)|p = n
     |T(n)|O(n)
+  - [forum](https://canvas.lms.unimelb.edu.au/courses/17524/discussion_topics/361608)
   - Execution on X = [5, 2, 3, 8, 2, 3, 4, 5], n = 8
     - -> means the return of the function call
     - line 2, False
@@ -615,7 +617,92 @@ thread is allowed to continue beyond the barrier
     - prefix sum the converted array
 - [parallel tree traversal](https://cse.iitkgp.ac.in/~debdeep/courses_iitkgp/PAlgo/Autumn16-17/slides/Lect4PJumping.pdf)
 
-## 06
+## 06 sort and merge
+- Optimal EREW Compation [3, 4]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(n/p + log p) steps
+    |p(n)|p = n / log n
+    |T(n)|O(n)
+  - input array X has k non-empty elements and 把non-empty elements移动到前k个position
+    - [null, 1, null, null, 4] -> [1, 4, null, null, null]
+- Optimal EREW UniqueCounts [5, 6, 7]
+  - |||
+    |---|---|
+    |input size|n, n>0
+    |t(n)|O(n/p + log p) steps
+    |p(n)|p = n / log n
+    |T(n)|O(n)
+  - input sorted array X and return [(value, value's counts in X), ...]; result padded with null to have size = X.size
+    - [1,1,1,2,3,3,5,6,6,6,6] -> [(1, 3), (2, 1), (3, 2), (5, 1), (6, 4), null, null, null, null, null, null]
+- Optimal EREW Distribute [8, 9, 10]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(n/p + log p) steps
+    |p(n)|p = ceil(n / log n), ceil because <br /> n = 8, <br />p = n / log n = 3 (round up)<br />if not round up, will miss elements<br /> n / p = 3
+    |T(n)|O(n)
+  - input array X, with some null and return nonempty elements copied to itself and all consecutive nonempty positions
+    - **Require X[0] != null**
+    - [6, 3, null, null, 5, null, null] -> [6, 3, 3, 3, 5, 5, 5]
+- Optimal EREW Merge [16-19]
+  - |||
+    |---|---|
+    |input size|n, n=sum(n1, n2)
+    |t(n)|O(n/p + log p) steps
+    |p(n)|p = n / log n
+    |T(n)|O(n)
+  - merge two sorted array A, B
+- Suboptimal EREW MergeSort [20]
+    - |||
+      |---|---|
+      |input size|n
+      |t(n)|O(n/p * log(n/p) +  (n/p + log p) * log p) steps <br />p = n, O(log log n), work = O(n (log log n))
+      |p(n)|p = n
+      |T(n)|O(n log n)
+- Suboptimal CREW RankMerge [24]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log n) steps, sequential binary search
+    |p(n)|p = n
+    |T(n)|O(n)
+  - merge two array with n unique elements in each array
+  - on EREW, t(n) = O(n), p(n) = 0(n) [22]
+  - on EREW, t(n) = O(log n), p(n) = 0(n^2) [23]
+  - on CRCW, t(n) = O(1), p(n) = 0(n^2) [23]
+  - (above algorithm)[https://www.massey.ac.nz/~mjjohnso/notes/59735/myslides8.pdf]
+- Bitonic Mergesort [25-29]
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log log n) steps
+    |p(n)|p = n
+    |T(n)|O(n log n)
+  - [pseudo code](https://en.wikipedia.org/wiki/Bitonic_sorter) and [c code](https://www2.cs.duke.edu/courses/fall08/cps196.1/Pthreads/bitonic.c)
+- Optimal parallel merging & sorting
+  - do not require reading from or writing into the same memory location simultaneously, 
+    - hence they can be applied on a EREW machine
+  - merge [31]
+    - |||
+      |---|---|
+      |input size|n
+      |t(n)|O(n / p) = O(sqrt(n)) steps
+      |p(n)|p = sqrt(n)
+      |T(n)|O(n log n)
+    - lemma proving in [tute09 10-16]
+  - Multiway Parallel Sort [34]
+    - |||
+      |---|---|
+      |input size|n
+      |t(n)|O(n log n / p) = O(sqrt(n) * log n) steps
+      |p(n)|p = sqrt(n)
+      |T(n)|O(n log n)
+  - [more](tute 09-1)
+- QuickSort [14 and below link]
+- [lots of parallel sort](http://web.cse.msstate.edu/~luke/Courses/sp19/CSE4163/Slides/DPA_Sorting.pdf)
+
 
 ## 07 parallel algorithm techniques
 - Algorithms can be loosely classified as 1+ of:
@@ -656,6 +743,10 @@ thread is allowed to continue beyond the barrier
 ## 08 cuda
 
 ## 09 interconnection
+
+- TODO hypercube prefix sum
+  - [link](https://www8.cs.umu.se/kurser/5DV050/VT11/lab1.pdf)
+  - [2019 L[Hypercube and Embeddings]]()
 
 ## 10 systolic
 - Different from PRAM model
