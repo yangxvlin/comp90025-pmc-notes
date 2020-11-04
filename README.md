@@ -60,8 +60,14 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
   - predict the maximum achievable speedup for a given program
 - Gustafson's Law: S(p) = p + (1 − p) s.
   - s = sequential part
-- efficiency = E = S(p) / p
-  - max p for optimal processor allocation? [29]
+- efficiency = E = S(p) / p = the speedup per processor
+  - optimal processor allocation [29]
+  - max p while maintaining optimal processor allocation? [29]
+  - > [2017s1 Q1a 5 marks] In lectures we sometimes talked about "processor optimal" or "optimal processor allocation".   
+    What does this mean, and  
+    what is the difference between this and the definition of optimality for PRAM algorithms?
+      - If E = O(1) then we say the parallel algorithm has optimal processor allocation (size equals work)
+      - optimal processor allocation is achieved if speedup per processor is constant time while optimality for PRAM algorithms is achieved if runtime is polylogarithmic or doing same amount of work in a shorter steps
 - feasibility: def [32]
   - 如果我们algorithm demand的资源随n增长的太快的话, 氪金也解决不了问题   
   - feasible [33]
@@ -946,7 +952,7 @@ thread is allowed to continue beyond the barrier
         <img width="50%" src="./docs/8.jpg"/>
     - > [2018S2 Q1d 4marks]  Define the diameter and degree of a static interconnection network.  
         Explain why these two properties are important from a parallel computer architecture perspective and explain the tradeoff between them.
-        - They are important because of the cost = degree * diameter. It is desirable to achieve a low cost. Consequently, small degree and diameter at the same time is desirable. The tradeoff is a decreasing degree might an increasing diameter which is the tradeoff. As a result, we need to find a balance between them to achieve a low cost.
+        - We want a small diameter because communication complexity is determined by the diameter of the architecture: either impacting the total time for sending a message or lower bounding the best runtime of an algorithm for that architecture. We want a small degree because it reduces the wiring complexity of the architecture, which makes it easier to physically build. They are important because of the cost = degree * diameter. It is desirable to achieve a low cost. Consequently, small degree and diameter at the same time is desirable. The tradeoff is a decreasing degree might an increasing diameter which is the tradeoff. As a result, we need to find a balance between them to achieve a low cost.
     - |Topological property|def|when useful
       |---|---|---|
       |degree/cost to build|d = maximum number of edges connected to a single vertex in the graph
