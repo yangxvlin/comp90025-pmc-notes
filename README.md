@@ -1031,17 +1031,31 @@ Write a parallel algorithm that implements the butterfly barrier on a hypercube 
     # p: number of processors, p=2^t
     Hypercude bufferfly barrier(p)
 
-    for k from 1 to t:
-        group_size = 2^k
-
+    for k from 1 to t+1:
         do in p processors for i from 0 to p-1:
-            cur_group = floor(i / group_size)
-            group_upper = cur_group*group_size - 1
+            # map, send in cur round
+            if k < t+1:
+                group_size = 2^k
+                cur_group = floor(i / group_size) + 1
+                group_upper = cur_group*group_size - 1
 
-            if i+k > group_upper:
-                send msg to processor group_upper - k
-            else:
-                send msg to processor (i+k)
+                if i+k > group_upper:
+                    send msg to processor group_upper - k
+                else:
+                    send msg to processor (i+k)
+            
+            # remap, receive from sender in previous round
+            if k > 1:
+                group_size = 2^(k-1)
+                cur_group = floor(i / group_size)
+                group_lower = cur_group*group_size
+                group_upper = cur_group*group_size - 1
+
+                if i-(k-1) < group_lower:
+                    receive msg to processor group_lower + (k-1)
+                else:
+                    receive msg to processor i-(k-1)
+
     ```
 ## 10 systolic
 - Different from PRAM model
