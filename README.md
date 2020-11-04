@@ -602,6 +602,28 @@ thread is allowed to continue beyond the barrier
     - t_b = a time per byte
     - l = number of bytes in the message
   - efficient message passing = t_b * l >> t_f
+  - > [2017s2 Q4a 10marks] Consider two processors, A and B, each having a sorted list of k integers.  
+  Consider the problem of finding the k smallest integers from the combined 2k integers, i.e. where the answer should be available on processor A.  
+  One trivial way to do this is for processor B to send its entire list to processor A, and then A merges them to obtain the smallest k.  
+  Assuming computation time is negligible, this would take time t_m = t_s + k t_d, where ts
+is startup time and td is the time to send an integer.  
+  Assuming computation time is negligible, is there a faster way (on average) to obtain the result at A? Provide your reasoning and any further assumptions made.
+    - ```
+      Assume k = 2^t, t > 0
+      Assume we have sorted list_B on processor B
+      On processor B:
+          t = log2 k
+          for i from 0 to k / t:
+              start, end = i * t, (i+1) * t
+              send list_B[start: end] to processor A
+              if receive a 0 from processor A:
+                  break
+      // on average, we just send k/t/2 round which is k/t/2 * t = k / 2 elements to processor A
+      // on average, we just receive t/2 integers from processor A
+      // So we have k / 2 + log2 k integers being transferred rather than k in the naive approach on average
+      // So we have k + log2 k integers being transferred rather than k in the naive approach in worst case, whole B_list are k smallest
+      // So we have log2 k + 1 integers being transferred rather than k in the naive approach in best case, whole A_list are k smallest
+      ```
 - Parallel run time: t_p
   - t_p = t_comp + t_comm
     - t_comp: computation time
@@ -841,7 +863,7 @@ thread is allowed to continue beyond the barrier
     - |||
       |---|---|
       |input size|n
-      |t(n)|O(n/p * log(n/p) +  (n/p + log p) * log p) steps <br />p = n, O(log log n), work = O(n (log log n))
+      |t(n)|O(n/p * log(n/p) +  (n/p + log p) * log p) steps <br />p = n, O((log n)^2), work = O(n (log n)^2)
       |p(n)|p = n
       |T(n)|O(n log n)
 - Suboptimal CREW RankMerge [24]
@@ -972,6 +994,8 @@ thread is allowed to continue beyond the barrier
     - > [2018S2 Q1d 4marks]  Define the diameter and degree of a static interconnection network.  
         Explain why these two properties are important from a parallel computer architecture perspective and explain the tradeoff between them.
         - We want a small diameter because communication complexity is determined by the diameter of the architecture: either impacting the total time for sending a message or lower bounding the best runtime of an algorithm for that architecture. We want a small degree because it reduces the wiring complexity of the architecture, which makes it easier to physically build. They are important because of the cost = degree * diameter. It is desirable to achieve a low cost. Consequently, small degree and diameter at the same time is desirable. The tradeoff is a decreasing degree might an increasing diameter which is the tradeoff. As a result, we need to find a balance between them to achieve a low cost.
+    - > [2017S2 Q1b 4marks] How does our notion of algorithm optimality change when, rather than shared memory, we consider algorithms that run on an architecture such as a mesh or hypercube?
+      - Rather than considering work = sequential time complexity or polylogarithmic runtime, we need to consider the cost = degree * diameter instead for the static network. The smaller cost, the better algorithm run on static network is.
     - |Topological property|def|when useful
       |---|---|---|
       |degree/cost to build|d = maximum number of edges connected to a single vertex in the graph
