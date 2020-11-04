@@ -14,6 +14,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
     - [PRIORITY algorithm](#priority-algorithm)
       - [optimal Priority pattern](#optimal-priority-pattern)
     - [COMBINE algorithm](#combine-algorithm)
+    - [CREW algorithm](#crew-algorithm)
   - [02 architecture](#02-architecture)
   - [03 OpenMP](#03-openmp)
   - [04a communication](#04a-communication)
@@ -349,9 +350,10 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
       2. Compute in parallel the suffix sums of Q into array SSUM
 
       initialize ptmp[p], stmp[p], pindex[p], sindex[p]
-      do in p processors for i from (n/p)*i to (n/p)*(i+1) - 1:
-          ptmp[i] = (PSUM[i], i)
-          stmp[i] = (SSUM[i], i)
+      do in p processors for i from 0 to p-1:
+          for j from (n/p)*i to (n/p)*(i+1) - 1:
+          ptmp[j] = (PSUM[j], j)
+          stmp[j] = (SSUM[j], j)
 
 
       (_, p_index) <- Optimal EREW Maximum ptmp with lambda \x, y -> x
@@ -359,6 +361,11 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
 
       return Q[s_index: p_index+1]
       ```
+- EREW primes
+  - > [2016s2 Q4d 8marks] Consider the Sieve of Eratosthenes algorithm, shown below, that returns an array of length n in which the i-th position is set to true if i is a prime and to false otherwise. 
+    - <img width="50%" src="./docs/14.jpg"/>
+    - [algorithm 3.2](https://core.ac.uk/download/pdf/81135025.pdf)
+    - 看不懂paper
 #### optimal EREW pattern
 - (1)
   - ```
@@ -474,7 +481,33 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
         
         return res
     ```
+### CREW algorithm
+- CREW search
+  - |||
+    |---|---|
+    |input size|n
+    |t(n)|O(log_p n) = O(log2 n) steps
+    |p(n)|p = 2
+    |T(n)|O(log n)
+  - > [2016s2 Q4a 8marks] Consider a sorted array of n unique integers. For a given integer x, the search problem is to determine if the array contains x. This can be done sequentially using O(log n) time (binary search). Show how search can be done in O(log_p n) time using p processors on a CREW PRAM.
+    - ```
+      CREW search(input, x, n)
+          initialize found[p]
 
+          subarray_size = ceil(n/p)
+          // O(log2 (n/p)) = O(log2 n - log2 p)
+          do in p processors for i from 0 to p-1:
+              found[i] = binary search on input[subarray_size*i: subarray_size*(i+1)] with x
+
+          res = False
+          // O(p)
+          for i from 0 to p-1:
+              res = res && found[i]
+
+          return res
+          // t(n) = O(log2 n + p) and we want t(n) = O(log_p n)
+          // so p = 2
+      ```
 ## 02 architecture
 - PE: processing element
 - criticism of the PRAM [2] = why we need architecture
