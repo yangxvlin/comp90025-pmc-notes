@@ -1125,6 +1125,10 @@ Write a parallel algorithm that implements the butterfly barrier on a hypercube 
                     receive msg to processor i-(k-1)
 
     ```
+- > [2017s2 Q4b 10marks] Consider an n × n mesh network, where each processor, (i, j), i, j ∈ {1, 2, . . . , n}, contains an element a_{i,j} of a matrix A.   
+Assuming each edge of the mesh can send one element per time step (in both directions),  
+describe the communication steps required to transpose the matrix over the mesh, i.e. so that processor (i, j) obtains a_{j,i}. How many steps in total does this take?
+  - TODO no idea. sqrt(n) steps?
 ## 10 systolic
 - Different from PRAM model
   - no shared memory between processors
