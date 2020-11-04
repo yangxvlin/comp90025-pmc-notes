@@ -1,5 +1,5 @@
 # comp90025-pmc-notes
-COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary sheet
+COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary sheet
 
 <!-- TOC -->
 
@@ -46,6 +46,15 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
 - Brent's Principle: proof and def [26]
   - <img width="60%" src="./docs/11.jpg"/>
   - used to infer the best running time for a parallel algorithm that runs with a given size.
+  - > [2016s2 Q1b 6marks] Brent's Principle states that if an algorithm involving a total of x operations can be performed in t time on a PRAM with sufficiently many processors, then it can be performed in time t + (x - t) / p on a PRAM with p processors.
+    - > ii) Consider an algorithm that involves O(n) operations in total and O(log n) time. Using Brent's Principle or otherwise, what value of p provides optimality?
+      - For Brent's principle you should find the smallest complexity of p that does not increase the run time complexity.
+      - t = O(log n)
+      - x = O(n)
+      - then we have  t + (x - t) / p = O(log n) + O(n - log n) / p = O(log n) + O(n) / p
+      - so we want O(log n) + O(n) / p = O(log n)
+        - O(n) / p = O(log n)
+        - p = n / log n provides optimality
 - Optimality: def [27]
   - A PRAM algorithm is optimal if ...
 - Efficient: def [27]
@@ -984,6 +993,9 @@ is startup time and td is the time to send an integer.
   - Tree Termination Algorithm [59]
   - Fixed Energy Distribution Termination [60]
 - Navier-Stokes equation [61-63]
+- [2019s2 Q6b 2marks] Consider a problem that breaks down into a large number of independent computational jobs, where the time for each job may vary considerably. Briefly describe two approaches, one for OpenMP and one for MPI, that can be used to efficiently complete all of the jobs.
+  - OpenMP: schedule(dynamic)
+  - MPI: master-slave with dynamic loading
 ## 08 cuda
 
 ## 09 interconnection network
@@ -1003,6 +1015,10 @@ is startup time and td is the time to send an integer.
       - all p nodes on a bus are continuously requesting access then a bus can supply O(1/p) of its available bandwidth to each node.
     - minimum latency O(1) for each bus
       - with no contention, is constant or O(1) (which ignores signal propagation delay)
+    - > [2019s2 Q5b 2marks] Name and explain an advantage and a disadvantage of using a bus for a shared-memory computer, compared with other architectures.
+      - TODO check correctness
+      - adv: easy to add new processor/memory to the system
+      - disadv: has a communication bottleneck, all p nodes on a bus are continuously requesting access then a bus can supply O(1/p) of its available bandwidth to each node.
   - static networks (point-to-point networks)
     - = fixed point-to-point connections between modules
     - Message passing is required between the modules 
@@ -1010,10 +1026,10 @@ is startup time and td is the time to send an integer.
         - for processors to communicate (in a message passing machine).
       - Communication module [8]  
         <img width="50%" src="./docs/8.jpg"/>
-    - > [2018S2 Q1d 4marks]  Define the diameter and degree of a static interconnection network.  
+    - > [2018s2 Q1d 4marks]  Define the diameter and degree of a static interconnection network.  
         Explain why these two properties are important from a parallel computer architecture perspective and explain the tradeoff between them.
         - We want a small diameter because communication complexity is determined by the diameter of the architecture: either impacting the total time for sending a message or lower bounding the best runtime of an algorithm for that architecture. We want a small degree because it reduces the wiring complexity of the architecture, which makes it easier to physically build. They are important because of the cost = degree * diameter. It is desirable to achieve a low cost. Consequently, small degree and diameter at the same time is desirable. The tradeoff is a decreasing degree might an increasing diameter which is the tradeoff. As a result, we need to find a balance between them to achieve a low cost.
-    - > [2017S2 Q1b 4marks] How does our notion of algorithm optimality change when, rather than shared memory, we consider algorithms that run on an architecture such as a mesh or hypercube?
+    - > [2017s2 Q1b 4marks] How does our notion of algorithm optimality change when, rather than shared memory, we consider algorithms that run on an architecture such as a mesh or hypercube?
       - Rather than considering work = sequential time complexity or polylogarithmic runtime, we need to consider the cost = degree * diameter instead for the static network. The smaller cost, the better algorithm run on static network is.
     - |Topological property|def|when useful
       |---|---|---|
@@ -1043,6 +1059,13 @@ is startup time and td is the time to send an integer.
       |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||y||traffic on top nodes are busy
       |fat tree|[24]
       |K-ary fat tree|[25]
+    - > [2019s2 Q5a 3marks] A mesh network has a relatively high cost as measured by degree times diameter, compared to other networks like the hypercube and tree. However, it is a justifiable choice for an interconnection network. Give 3 reasons why.
+      - mesh has a constant time degree which makes it has a lower wiring complexity of the architecture
+      - mesh has planarity which makes it useful for integrated circuits as it eliminates the need for multiple layers
+      - TODO no idea
+    - > [2019s2 Q5c 5marks] Prove that any algorithm running in time T in a two-dimensional
+mesh of size n\*n processors can be executed in a one-dimensional mesh (i.e. a linear array) of n^2 processors in O(n T) time.
+      - TODO no idea
   - switching networks
     - switch  
       <img width="70%" src="./docs/9.jpg"/>
