@@ -65,11 +65,22 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
     - t(n) = the **parallel complexity** of a given parallel algorithm
 - Speedup = ts / tp **(in wall-clock time)**
   - def [36]
-- Amdahl's Law: S(p) = 1/f | large p
+- Amdahl's Law: S(p) = p / (1 + (p-1)f) or  = 1/f | large p
   - f = fraction of this time that cannot be parallelized
   - predict the maximum achievable speedup for a given program
 - Gustafson's Law: S(p) = p + (1 − p) s.
   - s = sequential part
+- > [2013s2 Q2 10marks] Explain in equations and/or words: speedup, Amdahl's law and Gustafon's law. Then analyse the below code in terms of speedup, Amdahl's law and Gustafon's law.
+  - <img width="50%" src="./docs/15.jpg"/>
+  - TODO
+  - Assume p = 1024
+  - T(n) = 3*SIZE // SIZE iteration calculation for a, b, sum
+  - t(n) = 2*SIZE // SIZE iteration calculation for a, b and sum is parallelized
+  - S(p) = T(n) / t(n) = 2/3
+  - By Amdahl's law, S(p) = p / (1 + (p-1)f) = 0.0005
+    - f = 2*SIZE for the first loop
+  - By Gustafon's law, S(p) = p + (1 − p) s = 2096128
+    - s = 2*SIZE
 - efficiency = E = S(p) / p = the speedup per processor
   - optimal processor allocation [29]
   - max p while maintaining optimal processor allocation? [29]
@@ -86,6 +97,8 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - Nick's Class: def [34]
 ### PRAM
 - PRAM [20]
+  - We only have p processors in theory, why still need it? 
+    - [20] and It allows us to explore how much parallelism we can actually achieve in theory. So it helps answer the question: is it worthwhile building a computer with more processors or not, for the given problem? Also, without allowing the number of processors to be a function of problem size, we can not reduce the complexity of the best known sequential algorithm; albeit that this reduction in complexity is theoretical. Finally, it is relatively easy to efficiently use less processors than a given parallel algorithm prescribes, while it is relatively hard to devise an algorithm that efficiently uses more processes than a given (parallel) algorithm describes. So devising an algorithm that shows how to use as many processors as possible is generally more useful.
 - 4 PRAM sub-categories [21]
   - C: concurrent, E: exclusive, R: read, W: write
   - EREW
@@ -469,10 +482,10 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
             do in processors (a, 1) for a from 0 to n-(m-1)-1: 
                 occured[a] = True
             do in processors (a, b) 
-              for a from 0 to n-(m-1)-1: 
-                  for b from 0 to m-1:
-                      if string[a+b] != substring[b]:
-                          combine_bool_and(occured[a], False)
+                for a from 0 to n-(m-1)-1: 
+                    for b from 0 to m-1:
+                        if string[a+b] != substring[b]:
+                            combine_bool_and(occured[a], False)
         
         res = 0        
         # O(1) step
@@ -481,6 +494,30 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
         
         return res
     ```
+- COMBINE Mamimum
+  - > [2011s2 Q6 8marks] Finding the maximum of a list of numbers is a fundamental operation.
+    - > [2011s2 Q6a] Show how to compute the maximum of n numbers in 0(1) time using n^2 processors on a CRCW PRAM.
+      - |||
+        |---|---|
+        |input size|n
+        |t(n)|O(1) steps
+        |p(n)|p = O(n^2)
+        |T(n)|O(n)
+    - ```
+      combine_int_max(a, b) = write max(a, b) to a
+
+      COMBINE CRCW substring_occurance(inputs, n, p)
+          initialize res = INT_MIN
+    
+          # O(1) step
+          do in processors (a, 1) for a from 0 to n-1:
+              combine_int_max(res, inputs[a])
+          
+          return res
+      ```
+      - TODO
+    - > [2011s2 Q6b] Show a recursive algorithm to compute the maximum of n^2 numbers in O(log log n) time using n^2 processors on a CRCW PRAM. Your recursive algorithm may make use of your algorithm above.
+      - TODO
 ### CREW algorithm
 - CREW search
   - |||
@@ -541,6 +578,8 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
       - adv: scale up with less cost
     - distributed shared memory (DSM)
       - = has distributed memory but a single address space
+- > [2013s2 Q1 6marks] Illustrate the concepts parallel computing using Flynn's taxonomy and Schwartz's parallel machine architecture.
+  - TODO
 - Uniformity of shared memory access [13]
   - |a shared memory system can be either|||adv|disadv
     |---|---|---|---|---
@@ -1011,6 +1050,9 @@ is startup time and td is the time to send an integer.
 - N-Body Problem [20-29]
   - Barnes-Hut Algorithm [30-33]
   - Orthogonal recursive bisection [34]
+    - > [2011s2 Q9 4marks] Explain the technique of orthogonal recursive bisection, give a reason for its use and a reason against.
+      - for: The octtree or quadtree does not lead to a balanced computation since some children will contain no particles. An orthogonal recursive bisection attempts to provide a more balanced division of space. Thus O(n^2) is reduced to O(n logn) in worst case
+      - against: some bodies should be in one group no longer in the same group, which makes Barnes-Hut algorithm less accurate
 - Jacobi iteration [36]
 - Laplace's equation [37-44]
   - Gauss-Seidel relaxation [45]
@@ -1020,11 +1062,11 @@ is startup time and td is the time to send an integer.
   - Centralised Program Termination [50]
   - Decentralised Program Termination [51]
     - Acknowledgement Messages [52-54]
-  - Ring Termination Algorithm [55]
-    - single pass [56, 58]
-    - dual pass [57-58]
-  - Tree Termination Algorithm [59]
-  - Fixed Energy Distribution Termination [60]
+    - Ring Termination Algorithm [55]
+      - single pass [56, 58]
+      - dual pass [57-58]
+    - Tree Termination Algorithm [59]
+    - Fixed Energy Distribution Termination [60]
 - Navier-Stokes equation [61-63]
 - [2019s2 Q6b 2marks] Consider a problem that breaks down into a large number of independent computational jobs, where the time for each job may vary considerably. Briefly describe two approaches, one for OpenMP and one for MPI, that can be used to efficiently complete all of the jobs.
   - OpenMP: schedule(dynamic)
@@ -1072,7 +1114,7 @@ is startup time and td is the time to send an integer.
       |||
       |(edge) bisection width|smallest number of edges that, when cut, would separate the network into two halves|useful for reliability
       |planarity|Can the network be embedded in a plane without any edges crossing|useful for integrated circuits as it eliminates the need for multiple layers = 简化physical建造的难度
-      |symmetry|Are all nodes topologically the same
+      |symmetry|Are all nodes topologically the same|easier to construct in hardware
     - n vertices  
       |network||d|k|c = d*k|bisection|planarity|symmetric|disadv
       |---|---|---|---|---|---|---|---|---|
