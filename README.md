@@ -962,10 +962,10 @@ thread is allowed to continue beyond the barrier
       |completely connected|[16]|n-1|1|O(n)
       |Barrel shifter, t = log2 n|[17]|2t-1|t/2|O(t^2)<br />= O((log2 n)^2)|good|
       |||||||||
-      |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j||y
+      |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j|sqrt(n)|y
       |torus|[19]|4|sqrt(n)+1|O(sqrt(n))|||y
       |||||||||
-      |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|
+      |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|t*n/2
       |Cube Connected Cycles<br/>n = t 2^t<br/>t = O(log n/ log log n)|[21]|3|2t + floor(t/2) - 2, t>3|**O(t) = O(log n/ log log n)**|
       |||||||||
       |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||y||traffic on top nodes are busy
@@ -1016,6 +1016,29 @@ thread is allowed to continue beyond the barrier
     |---|---|
     |input size|n = 2^t
     |t(n)|O(t^2) = O(log^2 n) rounds
+- Hypercude bufferfly barrier
+  - > [2018s2 Q3a 5marks] The following diagram shows a butterfly construction (on eight processors) that can be used for barrier synchronization. Each arrow represents a synchronization message.  
+Write a parallel algorithm that implements the butterfly barrier on a hypercube of n = 2^t processors.
+    - <img width="30%" src="./docs/12.jpg"/>
+  - |||
+    |---|---|
+    |input size|n = 2^t
+  - ```
+    # p: number of processors, p=2^t
+    Hypercude bufferfly barrier(p)
+
+    for k from 1 to t:
+        group_size = 2^k
+
+        do in p processors for i from 0 to p-1:
+            cur_group = floor(i / group_size)
+            group_upper = cur_group*group_size - 1
+
+            if i+k > group_upper:
+                send msg to processor group_upper - k
+            else:
+                send msg to processor (i+k)
+    ```
 ## 10 systolic
 - Different from PRAM model
   - no shared memory between processors
