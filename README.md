@@ -1147,12 +1147,16 @@ mesh of size n\*n processors can be executed in a one-dimensional mesh (i.e. a l
     - With switching networks, the hardare cost is no longer proportional to the degree d. 
       - Instead, we measure the **complexity = the number of switching elements**
     - n = number of inputs and outputs
-      |switch network||complexity|latency|other
-      |---|---|---|---|---|
-      |crossbar|[27]|O(n^2)|O(1)<br/>any 1-to-1 mapping of inputs to outputs is possible|= n-bus with single bus memory connections|
-      |Clos|[28-30]|< O(n^2)
-      |Benes|[31]|n log2 n - n/2 <br/>= O(n log n)|O(1)|= Clos with m=n=2
-      |Omega|[32]|n/2 * log2 n <br/>=  O(n log n)|O(n log n)|some 1-to-1 I/O mappings require up to log n phases to be realized
+      |switch network||stage|complexity|minimum latency|other
+      |---|---|---|---|---|---|
+      |crossbar|[27]||O(n^2)|O(1)<br/>any 1-to-1 mapping of inputs to outputs is possible|= n-bus with single bus memory connections|
+      |Clos|[28-30]||< O(n^2)
+      |Benes|[31]|2*log2 n - 1<br/>= O(log n)|n log2 n - n/2 <br/>= O(n log n)|O(1)|= Clos with m=n=2
+      |Omega|[32]|log2 n<br/>= O(log n)|n/2 * log2 n <br/>=  O(n log n)|O(n log n)|some 1-to-1 I/O mappings require up to log n phases to be realized
+      - Why multistage?
+        - This reduces the switching complexity of the center stage.
+      - [sort netwrok](https://www.inf.hs-flensburg.de/lang/algorithmen/sortieren/networks/sortieren.htm)
+        - <img width="50%" src="docs/16.jpg"/>
 ### static netwrok algorithm
 - Ring Broadcast
   - [L2019 "Hypercube and Embeddings" 2]
@@ -1223,6 +1227,11 @@ Write a parallel algorithm that implements the butterfly barrier on a hypercube 
                     receive msg to processor i-(k-1)
 
     ```
+- Mesh bitonic sort
+  - [link](http://www.seerc.org/wmc8/procedings_web/pages205-226.pdf)
+- Mesh UniqueElements
+  - [2016s2 Q4b 8marks] Consider a mesh of size sqrt(n) \* sqrt(n) nodes, where each node of the mesh contains an integer. The uniqueness problem is to determine whether all of the integers are unique. Consider a parallel algorithm that results in every node of the mesh knowing the result of the uniqueness problem. Show how this can be done in O(n log n) steps.
+    - TODO no idea
 - > [2017s2 Q4b 10marks] Consider an n × n mesh network, where each processor, (i, j), i, j ∈ {1, 2, . . . , n}, contains an element a_{i,j} of a matrix A.   
 Assuming each edge of the mesh can send one element per time step (in both directions),  
 describe the communication steps required to transpose the matrix over the mesh, i.e. so that processor (i, j) obtains a_{j,i}. How many steps in total does this take?
