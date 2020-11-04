@@ -716,22 +716,23 @@ thread is allowed to continue beyond the barrier
     - line 11, index [1, 3, 5, 7] gives
       - P's index floor(i/2) = [0, 1, 2, 3]
       - P = [7, 11, 5, 9]
-    - line 13, OddEven(X=P, 4) -> A = [7, 9, 12, 20, 22]
+    - line 13, OddEven(X=P, 4) -> A = [7, 18, 23, 32]
       - line 2, True
         - S = [7, ...]
-        - for i from 1 to 4
-          - S[1] = X[1] + S[0] = 7+7 = 14
-          - S[2] = X[2] + S[1] = 11+14 = 28
-          - S[3] = X[3] + S[2] = 5+28 = 33
-          - S[4] = X[4] + S[3] = 9+20 = 22
-        - return S = [7, 9, 12, 20, 22]
-    - line 14, for i from 2 to 7
-      - line 15, if i mod 2 == 0:
+        - for i from 1 to 3
+          - S[1] = X[1] + S[0] = 11+7 = 18
+          - S[2] = X[2] + S[1] = 5+18 = 23
+          - S[3] = X[3] + S[2] = 9+23 = 32
+        - return S = [7, 18, 23, 32]
+    - line 14, for index from 2 to 7
+      - line 15, for index [2, 4, 6]
         - S[2] += A[0] = 3+7 = 10
-        - S[4] += A[1] = 2+9 = 11
-        - S[6] += A[2] = 4+12 = 16
-    - // now S = [5, _, 10, _, 11, _, 16, _]
-    - return S = [5, _, 10, _, 11, _, 16, _]
+        - S[4] += A[1] = 2+18 = 20
+        - S[6] += A[2] = 4+23 = 27
+    - // now S = [5, _, 10, _, 20, _, 27, _]
+    - line 17, for index [1, 3, 5, 7]
+      - S = [5, 7, 10, 18, 20, 23, 27, 32]
+    - return S = [5, 7, 10, 18, 20, 23, 27, 32]
 - Ladner and Fischer's parallel prefix algorithm [18]
 - Optimal EREW Prefix sum
   - |||
@@ -903,6 +904,24 @@ thread is allowed to continue beyond the barrier
 - Clipping [7]
 - Image smoothing [8]
 - Partitioning [9-11]
+  - square partition and column partition
+    - If communication between processes does not take place then either method is acceptable.
+    - otherwise  
+      <img width="50%" src="./docs/13.jpg"/>
+    - > [2017s2 Q2b 4marks] When dividing a problem space over a number of processors, e.g. an image, sometimes the space can be divided into square regions and sometimes it can be divided into columns (or strips).  
+      Assume that the time taken to send a message of k elements from one processor to another is t_m = t_s + k * t_d, where ts is startup time and td is the time taken per element.  
+      What is the condition on t_s for the square partitioning method to take less time than the column partitioning method? Show your working out and any further assumptions that you require.
+      - Assume we have n images where n = 2^t, t > 1
+      - Assume we have n processors available for square partition. then it has sqrt(n) processors per row
+      - Assume we have n processors available for column partition. then has n processors for n columns.
+      - t_sq = 8(t_s + sqrt(n)*t_d)
+        - k = sqrt(n) here to send and receive between processors
+      - t_col = 4(ts + n*t_d)
+        - k = n here to send and receive between processors
+      - t_sq < t_col
+        - 8(t_s + sqrt(n)\*t_d) < 4(ts + n\*t_d)
+        - 4t_s < (4n - 8sqrt(n)) t_d
+        - t_s < (n - 2sqrt(n)) t_d
 - Mandelbrot Set [12-14]
 - Dynamic Load Balancing [15]
 - Monte Carlo Methods [16-19]
@@ -975,7 +994,7 @@ thread is allowed to continue beyond the barrier
       |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j|sqrt(n)|y
       |torus|[19]|4|sqrt(n)+1|O(sqrt(n))|||y
       |||||||||
-      |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|t*n/2
+      |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|n/2
       |Cube Connected Cycles<br/>n = t 2^t<br/>t = O(log n/ log log n)|[21]|3|2t + floor(t/2) - 2, t>3|**O(t) = O(log n/ log log n)**|
       |||||||||
       |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||y||traffic on top nodes are busy
