@@ -331,6 +331,25 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
         
         return match[n-1]
     ```
+- Optimal EREW max subsequence sum
+  - > [2017s2 Q4c 10marks] Given a sequence Q of n numbers (positive and negative), the maximum subsequence of Q is the contiguous subsequence that has the maximum sum among all contiguous subsequences of Q.  
+  Devise an EREW PRAM algorithm for finding the maximum subsequence of Q in O(log n) time. You may assume that Q contains 2^k elements where k ≥ 0.
+    - [solution on page 4](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.88.6054&rep=rep1&type=pdf)
+    - ```
+      1. Compute in parallel the prex sums of Q into array PSUM	
+      2. Compute in parallel the suffix sums of Q into array SSUM
+
+      initialize ptmp[p], stmp[p], pindex[p], sindex[p]
+      do in p processors for i from (n/p)*i to (n/p)*(i+1) - 1:
+          ptmp[i] = (PSUM[i], i)
+          stmp[i] = (SSUM[i], i)
+
+
+      (_, p_index) <- Optimal EREW Maximum ptmp with lambda \x, y -> x
+      (_, s_index) <- Optimal EREW Maximum stmp with lambda \x, y -> x
+
+      return Q[s_index: p_index+1]
+      ```
 #### optimal EREW pattern
 - (1)
   - ```
