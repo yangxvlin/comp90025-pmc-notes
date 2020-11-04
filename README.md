@@ -244,6 +244,8 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
                   if input[j] >= M[i]:
                       m[i] = M[i]
                       M[i] = input[j]
+                  elif input[j] > m[i]:
+                      m[i] = input[j]
 
           m1, m2 = INT_MIN, INT_MIN # intended m1 > m2
           # O(p) steps
