@@ -241,9 +241,11 @@ COMP90025 - Parallel and Multicore Computing - 2020S2 - Exam review/summary shee
           # O(n/p) steps
           do in p processors for i from 0 to p-1:
               for j from ceil(n/p)*i to ceil(n/p)*(i+1) - 1:
+                  # input[j] >= M[i] >= m[i]
                   if input[j] >= M[i]:
                       m[i] = M[i]
                       M[i] = input[j]
+                  # M[i] > input[j] >= m[i]
                   elif input[j] > m[i]:
                       m[i] = input[j]
 
