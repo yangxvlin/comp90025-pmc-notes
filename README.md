@@ -1072,6 +1072,8 @@ is startup time and td is the time to send an integer.
   - OpenMP: schedule(dynamic)
   - MPI: master-slave with dynamic loading
 ## 08 cuda
+- > [2011s2 Q8 2marks] <img width="50%" src="./docs/17.png"/>
+  - The execution time is not consistent in a 32 threads wrap. Thus, we have divergence within a warp. This is what a GPU cannot do efficiently.
 
 ## 09 interconnection network
 - why we need it?
