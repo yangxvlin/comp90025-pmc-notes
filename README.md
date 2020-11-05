@@ -1227,6 +1227,10 @@ Write a parallel algorithm that implements the butterfly barrier on a hypercube 
                     receive msg to processor i-(k-1)
 
     ```
+- Hypercube Martix multiplication
+  - > [2019s2 Q7 10marks] Given the matrices A = a_{j,k} and B = b_{j,k} for 0 <= j, k <= 1 and n = 2^q and q >= 1 write a parallel algorithm to compute a matrix C = c_{j,k} for 0 <= j, k <= 1 containing the product of matrices A and B, i.e. C = AB.  
+  Assume that the algorithm will be implemented in a cube of p = n^3 = 2^{3q} processors and that the elements of the input matrics A, B and output matrix C are stored in the respective processor of the cube (in the first 2 dimensional plane).
+    - [Matrix Multiplication using Hypercube Network](https://www.tutorialspoint.com/parallel_algorithm/matrix_multiplication.htm)
 - Mesh bitonic sort
   - [link](http://www.seerc.org/wmc8/procedings_web/pages205-226.pdf)
 - Mesh UniqueElements
