@@ -84,11 +84,11 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
 - efficiency = E = S(p) / p = the speedup per processor
   - optimal processor allocation [29]
   - max p while maintaining optimal processor allocation? [29]
-  - > [2017s1 Q1a 5 marks] In lectures we sometimes talked about "processor optimal" or "optimal processor allocation".   
+  - > [2017s2 Q1a 5 marks] In lectures we sometimes talked about "processor optimal" or "optimal processor allocation".   
     What does this mean, and  
     what is the difference between this and the definition of optimality for PRAM algorithms?
       - If E = O(1) then we say the parallel algorithm has optimal processor allocation (size equals work)
-      - optimal processor allocation is achieved if speedup per processor is constant time while optimality for PRAM algorithms is achieved if runtime is polylogarithmic or doing same amount of work in a shorter steps
+      - optimal processor allocation is achieved if speedup per processor is constant (using p processors gives a speedup of p or Theta(p)). If p can become large enough to reduce the runtime complexity to a polylogarithmic while maintaining optimal processor allocation then the algorithm would be optimal. While optimality for PRAM algorithms is achieved if runtime is polylogarithmic or doing same amount of work compared to the best sequential algorithm in a shorter steps
 - feasibility: def [32]
   - 如果我们algorithm demand的资源随n增长的太快的话, 氪金也解决不了问题   
   - feasible [33]
@@ -1052,7 +1052,7 @@ is startup time and td is the time to send an integer.
   - Orthogonal recursive bisection [34]
     - > [2011s2 Q9 4marks] Explain the technique of orthogonal recursive bisection, give a reason for its use and a reason against.
       - for: The octtree or quadtree does not lead to a balanced computation since some children will contain no particles. An orthogonal recursive bisection attempts to provide a more balanced division of space. Thus O(n^2) is reduced to O(n logn) in worst case
-      - against: some bodies should be in one group no longer in the same group, which makes Barnes-Hut algorithm less accurate
+      - against: The against would be that it requires computations to construct an ORB whereas the quadtree does not.
 - Jacobi iteration [36]
 - Laplace's equation [37-44]
   - Gauss-Seidel relaxation [45]
@@ -1107,7 +1107,7 @@ is startup time and td is the time to send an integer.
         Explain why these two properties are important from a parallel computer architecture perspective and explain the tradeoff between them.
         - We want a small diameter because communication complexity is determined by the diameter of the architecture: either impacting the total time for sending a message or lower bounding the best runtime of an algorithm for that architecture. We want a small degree because it reduces the wiring complexity of the architecture, which makes it easier to physically build. They are important because of the cost = degree * diameter. It is desirable to achieve a low cost. Consequently, small degree and diameter at the same time is desirable. The tradeoff is a decreasing degree might an increasing diameter which is the tradeoff. As a result, we need to find a balance between them to achieve a low cost.
     - > [2017s2 Q1b 4marks] How does our notion of algorithm optimality change when, rather than shared memory, we consider algorithms that run on an architecture such as a mesh or hypercube?
-      - Rather than considering work = sequential time complexity or polylogarithmic runtime, we need to consider the cost = degree * diameter instead for the static network. The smaller cost, the better algorithm run on static network is.
+      - Rather than considering work = sequential time complexity or parallel algorithm has polylogarithmic runtime, the optimal complexity of an algorithm run on a static network is lower bounded (usually) by the diameter of the architecture; e.g. for a mesh of n nodes, sorting can't be any better than \sqrt(n) runtime.
     - |Topological property|def|when useful
       |---|---|---|
       |degree/cost to build|d = maximum number of edges connected to a single vertex in the graph
@@ -1146,8 +1146,10 @@ mesh of size n\*n processors can be executed in a one-dimensional mesh (i.e. a l
   - switching networks
     - switch  
       <img width="70%" src="./docs/9.jpg"/>
-    - With switching networks, the hardare cost is no longer proportional to the degree d. 
+    - With switching networks, the hardware cost is no longer proportional to the degree d. 
       - Instead, we measure the **complexity = the number of switching elements**
+    - the optimal complexity's definition changes for algorithm run the switch network?
+      - Yes, since the communication is bounded by the switching network, and it is a function of the minimum latency of the switching network.
     - n = number of inputs and outputs
       |switch network||stage|complexity|minimum latency|other
       |---|---|---|---|---|---|
