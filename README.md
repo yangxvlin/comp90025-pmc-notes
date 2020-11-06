@@ -545,6 +545,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
           // t(n) = O(log2 n + p) and we want t(n) = O(log_p n)
           // so p = 2
       ```
+- [PRAM algorithm techniques](https://homes.cs.washington.edu/~arvind/cs424/readings/pram.pdf)
 ## 02 architecture
 - PE: processing element
 - criticism of the PRAM [2] = why we need architecture
