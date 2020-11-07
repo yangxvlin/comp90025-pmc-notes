@@ -72,7 +72,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - s + p \* r: the execution time for a single processor
   - let s + r = 1 then S(p) = p + (1 - p) \* s
   - s = the time of sequential part in the code
-  - r = the time of parallel part in the code = 代码里的并行代码的时间
+  - r = the time of parallel part in the code on each p processors = 代码里的并行代码的时间
   - speedup keeps grows as p grows where s is a constant
     - i.e. optimistic because keeps adding processors will make it run faster where sequential part is negligible 
 - > [2013s2 Q2 10marks] Explain in equations and/or words: speedup, Amdahl's law and Gustafon's law. Then analyse the below code in terms of speedup, Amdahl's law and Gustafon's law.
@@ -83,9 +83,10 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - S(p) = T(n) / t(n) = 3/2
   - By Amdahl's law, S(p) = p / (1 + (p-1)f) = 1024/(1 + (1024-1)\* 2/3) = 1024 / 683 = 1.4993
     - f = 2\*SIZE / (3\*SIZE) = 2/3 for the first loop
-  - By Gustafon's law, S(p) = p + (1 - p) s = 1024 - 2013 * 2/3 \* m = 1024 - 1342 \* m
+  - By Gustafon's law, S(p) = (s + p \* r) / (s + r) = m / (2/3 + 1/(3p)) m = (3p) / (2p + 1) = 1024 / 683 = 4.4993
     - assume the execution time of the code = m
-    - r = 1/3 \* m
+    - p\*r = 1/3 \* m
+      - r = 1/(3p) \* m
     - s = 2/3 \* m
 - efficiency = E = S(p) / p = the speedup per processor
   - optimal processor allocation [29]
