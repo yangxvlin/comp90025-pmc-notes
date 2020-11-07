@@ -68,19 +68,22 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
 - Amdahl's Law: S(p) = p / (1 + (p-1)f) or  = 1/f | large p
   - f = fraction of this time that cannot be parallelized
   - predict the maximum achievable speedup for a given program
-- Gustafson's Law: S(p) = p + (1 − p) s.
+- Gustafson's Law: S(p) = (s + p \* r) / (s + r)
+  - let s + r = 1 then S(p) = p + (1 - p) + s
   - s = sequential part
+  - r = parallel part
+  - speedup keeps grows as p grows where s is a constant
+    - i.e. optimistic because keeps adding processors will make it run faster where sequential part is negligible 
 - > [2013s2 Q2 10marks] Explain in equations and/or words: speedup, Amdahl's law and Gustafon's law. Then analyse the below code in terms of speedup, Amdahl's law and Gustafon's law.
   - <img width="50%" src="./docs/15.jpg"/>
-  - TODO
   - Assume p = 1024
   - T(n) = 3*SIZE // SIZE iteration calculation for a, b, sum
   - t(n) = 2*SIZE // SIZE iteration calculation for a, b and sum is parallelized
-  - S(p) = T(n) / t(n) = 2/3
-  - By Amdahl's law, S(p) = p / (1 + (p-1)f) = 0.0005
-    - f = 2*SIZE for the first loop
-  - By Gustafon's law, S(p) = p + (1 − p) s = 2096128
-    - s = 2*SIZE
+  - S(p) = T(n) / t(n) = 3/2
+  - By Amdahl's law, S(p) = p / (1 + (p-1)f) = 1024/(1 + (1024-1)\* 2/3) = 1024 / 683 = 1.4993
+    - f = 2\*SIZE / (3\*SIZE) = 2/3 for the first loop
+  - By Gustafon's law, S(p) = (s + p \* r) / (s + r) = (1 + p\*(2/3)) / (5/3) = (3/5) + (2/5)\*p = 410.2
+    - r = 2/3\*s in this case
 - efficiency = E = S(p) / p = the speedup per processor
   - optimal processor allocation [29]
   - max p while maintaining optimal processor allocation? [29]
@@ -306,7 +309,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - |||
     |---|---|
     |input size|m, n, n > m
-    |t(n)|O(log n) steps
+    |t(n)|O(n) steps
     |p(n)|O(n)
     |T(n)|O(mn)
   - ```
@@ -325,7 +328,8 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
 
         int i = 0; // index for substring[] 
         int j = 0; // index for string[] 
-        while (i < m) { 
+        // O(n)
+        while (i < n) { 
             if (string[j] == substring[i]) { 
                 j++; 
                 i++; 
