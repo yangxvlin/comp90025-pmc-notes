@@ -69,6 +69,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - f = fraction of this time that cannot be parallelized
   - predict the maximum achievable speedup for a given program
 - Gustafson's Law: S(p) = (s + p \* r) / (s + r)
+  - s + p \* r: the execution time for a single processor
   - let s + r = 1 then S(p) = p + (1 - p) \* s
   - s = the time of sequential part in the code
   - r = the time of parallel part in the code = 代码里的并行代码的时间
@@ -82,10 +83,10 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - S(p) = T(n) / t(n) = 3/2
   - By Amdahl's law, S(p) = p / (1 + (p-1)f) = 1024/(1 + (1024-1)\* 2/3) = 1024 / 683 = 1.4993
     - f = 2\*SIZE / (3\*SIZE) = 2/3 for the first loop
-  - By Gustafon's law, S(p) = p + (1 - p) s = 1024 - 2013 * 1/1025 \* m = 1024 - 0.9990 \* m
+  - By Gustafon's law, S(p) = p + (1 - p) s = 1024 - 2013 * 2/3 \* m = 1024 - 1342 \* m
     - assume the execution time of the code = m
-    - r = SIZE / (SIZE+1) \* m = 1024/1025 \* m
-    - s = 1 / (SIZE+1) \* m  = 1/1025 \* m
+    - r = 1/3 \* m
+    - s = 2/3 \* m
 - efficiency = E = S(p) / p = the speedup per processor
   - optimal processor allocation [29]
   - max p while maintaining optimal processor allocation? [29]
