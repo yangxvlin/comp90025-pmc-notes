@@ -70,8 +70,8 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - predict the maximum achievable speedup for a given program
 - Gustafson's Law: S(p) = (s + p \* r) / (s + r)
   - let s + r = 1 then S(p) = p + (1 - p) \* s
-  - s = sequential part
-  - r = parallel part
+  - s = the time of sequential part in the code
+  - r = the time of parallel part in the code = 代码里的并行代码的时间
   - speedup keeps grows as p grows where s is a constant
     - i.e. optimistic because keeps adding processors will make it run faster where sequential part is negligible 
 - > [2013s2 Q2 10marks] Explain in equations and/or words: speedup, Amdahl's law and Gustafon's law. Then analyse the below code in terms of speedup, Amdahl's law and Gustafon's law.
@@ -82,8 +82,10 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - S(p) = T(n) / t(n) = 3/2
   - By Amdahl's law, S(p) = p / (1 + (p-1)f) = 1024/(1 + (1024-1)\* 2/3) = 1024 / 683 = 1.4993
     - f = 2\*SIZE / (3\*SIZE) = 2/3 for the first loop
-  - By Gustafon's law, S(p) = (s + p \* r) / (s + r) = (1 + p\*(2/3)) / (5/3) = (3/5) + (2/5)\*p = 410.2
-    - r = 2/3\*s in this case
+  - By Gustafon's law, S(p) = p + (1 - p) s = 1024/1025 + 1023 \* 1/1025 \* m = 0.9990 + 0.9980 m
+    - assume the execution time of the code = m
+    - r = SIZE / (SIZE+1) \* m = 1024/1025 \* m
+    - s = 1 / (SIZE+1) \* m  = 1/1025 \* m
 - efficiency = E = S(p) / p = the speedup per processor
   - optimal processor allocation [29]
   - max p while maintaining optimal processor allocation? [29]
