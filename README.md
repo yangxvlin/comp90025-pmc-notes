@@ -69,7 +69,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - f = fraction of this time that cannot be parallelized
   - predict the maximum achievable speedup for a given program
 - Gustafson's Law: S(p) = (s + p \* r) / (s + r)
-  - let s + r = 1 then S(p) = p + (1 - p) + s
+  - let s + r = 1 then S(p) = p + (1 - p) \* s
   - s = sequential part
   - r = parallel part
   - speedup keeps grows as p grows where s is a constant
