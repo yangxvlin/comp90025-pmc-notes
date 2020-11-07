@@ -83,7 +83,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - S(p) = T(n) / t(n) = 3/2
   - By Amdahl's law, S(p) = p / (1 + (p-1)f) = 1024/(1 + (1024-1)\* 2/3) = 1024 / 683 = 1.4993
     - f = 2\*SIZE / (3\*SIZE) = 2/3 for the first loop
-  - By Gustafon's law, S(p) = (s + p \* r) / (s + r) = m / ((2/3 + 1/(3p)) m) = (3p) / (2p + 1) = 1024 / 683 = 4.4993
+  - By Gustafon's law, S(p) = (s + p \* r) / (s + r) = m / ((2/3 + 1/(3p)) m) = (3p) / (2p + 1) = 1024 / 683 = 1.4993
     - assume the execution time of the code = m
     - p\*r = 1/3 \* m
       - r = 1/(3p) \* m
