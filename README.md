@@ -887,7 +887,7 @@ is startup time and td is the time to send an integer.
 
         # O(1) step
         for processor_i in range(0, p) do in parallel:
-            input[ceil(k*p) + i] += last  # update previous subarray's prefix to cur subarray
+            input[ceil(k * (n/p)) + i] += last  # update previous subarray's prefix to cur subarray
     ```
 ### Pointer jumping
 - P is a list of nodes and P[i] ∈ P is a pointer to a node in P
