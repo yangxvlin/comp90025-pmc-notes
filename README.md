@@ -889,12 +889,12 @@ is startup time and td is the time to send an integer.
     run Suboptimal EREW Odd/Even parallel prefix sum on last with size=p and p processors
 
     # O(n/p) = O(log n) steps
-    do in p-1 processors for k from 1 to ceil(n/p)-1:
-        last[k-1]  # take sub-array (k-1)'s last prefix sum
+    do in p-1 processors for i from 1 to ceil(n/p)-1:
+        last[i-1]  # take sub-array (i-1)'s last prefix sum
 
         # O(n/p) step
-        for i from ceil(k * (n/p)) to ceil((k+1) * (n/p))-1:  
-            input[i] += last[k-1]  # update previous subarray's prefix to cur subarray
+        for j from ceil(i * (n/p))+1 to ceil((i+1) * (n/p))-1:  
+            input[j] += last[i-1]  # update previous subarray's prefix to cur subarray
     ```
 ### Pointer jumping
 - P is a list of nodes and P[i] ∈ P is a pointer to a node in P
