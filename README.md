@@ -877,7 +877,8 @@ is startup time and td is the time to send an integer.
     # do sequential prefix sum on sub-array size=log(n) in parallel
     # O(n/p) = O(log n) steps
     for processor_i in range(0, p) do in parallel:
-        for j in range(ceil( i * (n/p) ) + 1, ceil( (i+1) * (n/p) ) :  # +1 as first element in subarray doesn't need to be prefixed
+        # +1 as first element in subarray doesn't need to be prefixed
+        for j in range(ceil( i * (n/p) ) + 1, ceil( (i+1) * (n/p) ) :  
             input[j] += input[j-1]
 
     # O(p) steps
