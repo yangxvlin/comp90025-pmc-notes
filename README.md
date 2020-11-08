@@ -874,20 +874,27 @@ is startup time and td is the time to send an integer.
     |T(n)|O(n)
   - ```
     input[n]
+    initialize last[p];
+
     # do sequential prefix sum on sub-array size=log(n) in parallel
     # O(n/p) = O(log n) steps
-    for processor_i in range(0, p) do in parallel:
+    do in p processors for i from 0 to p-1:
         # +1 as first element in subarray doesn't need to be prefixed
-        for j in range(ceil( i * (n/p) ) + 1, ceil( (i+1) * (n/p) ) :  
+        for j from ceil(i * (n/p))+1 to ceil((i+1) * (n/p))-1:  
             input[j] += input[j-1]
+        
+        last[i] = input[ceil( (i+1) * (n/p) - 1] # last in subarray
 
-    # O(p) steps
-    for k in range(1, p):
-        last <- input[ceil(k * (n/p)) - 1]  # take sub-array (k-1)'s last prefix sum
+    # O(log p) = O(log n + log log n) = O(log n) steps
+    run Suboptimal EREW Odd/Even parallel prefix sum on last with size=p and p processors
 
-        # O(1) step
-        for processor_i in range(0, p) do in parallel:
-            input[ceil(k * (n/p)) + i] += last  # update previous subarray's prefix to cur subarray
+    # O(n/p) = O(log n) steps
+    do in p-1 processors for k from 1 to ceil(n/p)-1:
+        last[k-1]  # take sub-array (k-1)'s last prefix sum
+
+        # O(n/p) step
+        for i from ceil(k * (n/p)) to ceil((k+1) * (n/p))-1:  
+            input[i] += last[k-1]  # update previous subarray's prefix to cur subarray
     ```
 ### Pointer jumping
 - P is a list of nodes and P[i] ∈ P is a pointer to a node in P
