@@ -999,7 +999,7 @@ is startup time and td is the time to send an integer.
   - |||
     |---|---|
     |input size|n
-    |t(n)|O(log log n) steps
+    |t(n)|O((log n)^2) steps
     |p(n)|p = n
     |T(n)|O(n log n)
   - [pseudo code](https://en.wikipedia.org/wiki/Bitonic_sorter) and [c code](https://www2.cs.duke.edu/courses/fall08/cps196.1/Pthreads/bitonic.c)
