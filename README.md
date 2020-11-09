@@ -763,7 +763,7 @@ is startup time and td is the time to send an integer.
   - what are the basic tasks happen when send data
   - |primitive|def|when need it?|disadvantage
     |---|---|---|---|
-    |block send|caller will be blocked until the function returns (receiver actually received)<br/> 1. caller call send()<br/>2. add data to sender buffer<br/>3. send data<br/>4. receiver call receive() and receive data from recevier buffer<br/>5. send "received" confirm back to sender<br/>6. sender delete data from sender buffer<br/>7. caller return|1. block as insufficient information to continue in program<br/>2. useful for loose synchronization (as below 2 don't ensure the receiver has received)
+    |block send [12]|caller will be blocked until the function returns (receiver actually received) <br/> 1. caller call send()<br/>2. add data to sender buffer<br/>3. send data<br/>4. receiver call receive() and receive data from recevier buffer<br/>5. send "received" confirm back to sender<br/>6. sender delete data from sender buffer<br/>7. caller return|1. block as insufficient information to continue in program<br/>2. useful for loose synchronization (as below 2 don't ensure the receiver has received)
     |local block send|caller won't be blocked (by waiting for receiver actually received)<br/><u>At step 2, **Will block if sender buffer is full.**</u><br/>(return step7 after step2)||1. might have deadlock and cause blocking <br/>(deadlock: sender buffer is full will receiver don't send confirm back)
     |non-block send|send will keep sending in the background<br/><u>At step 2, **Discard data if sender buffer is full.**</u><br/>|1. useful for small chunk independent data task, like realtime weather data calculation (losing some data is not a problem, **don't want to be blocked as has sufficient information to continue**)
     ||||
@@ -783,7 +783,7 @@ is startup time and td is the time to send an integer.
         | Distributed shared memory architecture|Y
     - parallel algorithm complexity perspective
       - While parallel algorithm complexity is a governed by the machine’s architecture upon which it executes, there are further aspects that can be considered, how messages are transmitted through the machine and what impact this can have on performance. 
-      - These considerations need to address the communication patterns that are required by parallel algorithms.
+        - These considerations need to address the communication patterns that are required by parallel algorithms.
   - efficient implementation of below often **depends on** the physical architecture of the machine.
     - N: #nodes
     - |primitive|source|destination|def|useful when|
