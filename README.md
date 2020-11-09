@@ -104,9 +104,27 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - inherently sequential [33]
   - Nick's Class: def [34]
 ### PRAM
-- PRAM [20]
-  - We only have p processors in theory, why still need it? 
-    - [20] and It allows us to explore how much parallelism we can actually achieve in theory. So it helps answer the question: is it worthwhile building a computer with more processors or not, for the given problem? Also, without allowing the number of processors to be a function of problem size, we can not reduce the complexity of the best known sequential algorithm; albeit that this reduction in complexity is theoretical. Finally, it is relatively easy to efficiently use less processors than a given parallel algorithm prescribes, while it is relatively hard to devise an algorithm that efficiently uses more processes than a given (parallel) algorithm describes. So devising an algorithm that shows how to use as many processors as possible is generally more useful.
+- PRAM: 
+  - What is if? def
+    - consisting of p identical RAM processors, each with its own private memory, that share a single large memory.
+    - The Fetch-Decode-Execute-WriteBack cycle is performed synchronously by the PRAM processors. 
+      - In other words, in one unit of time, each processor can read one global or local memory location, execute a single RAM operation, and write into one global or local memory location.
+  - Why PRAM assume we have a function p(n) processors?
+    - RAM used to measure sequential algorithm complexity
+      - To reduce complexity we need unbounded space, e.g. for a problem of size n we might ask for n processors; 
+        - in general we may assume a function p(n) processors. 
+        - This begins the theory of parallel computing – such an unbounded machine is impossible to actually build.
+  - More PRAM assumption { interconnected network }
+    - Its power draws from the fact that the model 
+      - ignores algorithmic complexity of machine connectivity and communication contention, data locality, synchronization, and reliability.
+    - Access to shared memory is O(1)
+  - We only have p processors in theory, why still need PRAM? 
+    - It allows us to explore how much parallelism we can actually achieve in theory. 
+      - So it helps answer the question: is it worthwhile building a computer with more processors or not, for the given problem? 
+    - Also, without allowing the number of processors to be a function of problem size, we can not reduce the complexity of the best known sequential algorithm; 
+      - albeit that this reduction in complexity is theoretical. 
+    - Finally, it is relatively easy to efficiently use less processors than a given parallel algorithm prescribes, while it is relatively hard to devise an algorithm that efficiently uses more processes than a given (parallel) algorithm describes. 
+    - So devising an algorithm that shows how to use as many processors as possible is generally more useful.
 - 4 PRAM sub-categories [21]
   - C: concurrent, E: exclusive, R: read, W: write
   - EREW
@@ -546,27 +564,31 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
 ## 02 architecture
 - PE: processing element
 - criticism of the PRAM [2] = why we need architecture
+- A <u>**PRAM implementation must**</u> specify how the processors and memory locations are arranged so that the PRAM model is not violated, 
+  - i.e., in a constant time step each of the processors can, in parallel, access a random memory location.
 - Flynn's taxnomy [4]
   - SISD [5]
   - SIMD [6, 7]
     - good for data parallelism
     - GPUs contain many small SIMD modules
   - MIMD [8]
-  - SIMD v.s. MIMD
-    - SIMD
-      - adv
-        1. simple to code
-        2. PRAM algorithms are close to SIMD
-    - MIMD
-      - adv
-        1. more flexible | given a number of PE
-      - disadv
-        1. more expensive
-        2. have multiple control unit here, which takes more space on chip and cost more time for instruction stream to arrive **(force the clock speed to be lower)**
+    - |SIMD v.s. MIMD|adv|disadv|
+      |---|---|---|
+      |SIMD|1. simple to code<br/>2. PRAM algorithms are close to SIMD|
+      |MIMD|1. more flexible given a number of PE|1. more expensive<br/>2. have multiple control unit here, which takes more space on chip and cost more time for instruction stream to arrive **(force the clock speed to be lower)**
   - MISD: There are no machines widely accepted to be MISD
+  - Disadvantage: this architecture does not tell us how memory and processors are organized.
 - Schwartz's parallel machine classes [10]
+  - Advantage: tell us how memory and processors are organized
   - paracomputers = shared memory multiprocessor
+    - (v.s. below) separate the memory from the processors. 
+      - The memory is shared and processors communicate via the shared memory. 
+        - processsors and memories are interconnected by bus, so one processor read at one time
+    - The PRAM module is closely approximated as a paracomputer in the sense that each memory location is equally accessible to each processor.
   - ultracomputer = distributed memory multiprocessor
+    - (v.s. above) distribute the memory over the processors (leading to modules)  
+      - A processor can access the memory on its module in constant time but accessing memory on remote modules can take longer.
+      - quick to access as it is local, but takes more time to fetch remote memory
   - Shared versus distributed memory [12]
     - shared memory system
       - = symmetric multiprocessor (SMP) | all processors are identical
@@ -576,13 +598,11 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
       - adv: scale up with less cost
     - distributed shared memory (DSM)
       - = has distributed memory but a single address space
-- > [2013s2 Q1 6marks] Illustrate the concepts parallel computing using Flynn's taxonomy and Schwartz's parallel machine architecture.
-  - TODO
 - Uniformity of shared memory access [13]
-  - |a shared memory system can be either|||adv|disadv
+  - |Depending on the interconnection network, a shared memory system can be either|||adv|disadv
     |---|---|---|---|---
-    |UMA|uniform memory access|[14]|Caches improve performance| but need protocols to keep cache coherency
-    |NUMA|non-uniform memory access|[15]|Access to local memory is fast| Access to remote memory is slower
+    |UMA|uniform memory access|[14]|1. local caches in each processors improve performance<br/>2. Compared to NUMA's disadvantage all processors have equal access time to any given memory location.| 1. but need protocols to keep cache coherency
+    |NUMA|non-uniform memory access|[15]|1. Access to local memory is fast|1.Access to remote memory is slower<br/>2. This different access speed leads to memory locations incur different access delays depending on which processor accesses them.
     |COMA|cache-only memory architecture|[]|
 - Simultaneous memory access [16]
   - Real memory access is different form theory
@@ -591,7 +611,8 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
     2. Once a bank is accessed, it has a recharge time before it can be accessed again.
   - Addressing memory banks [17]   
     <img width="80%" src="./docs/1.jpg"/>
-  - So, parallel memory access, rather than parallel processing
+      - explanation of how interleaving solves problem, see slide
+  - So, parallel memory access, rather than parallel processing because of the memory access pattern
 - Coprocessors [18]
   - GPU and Xeon Phi
   - |adv|disadv|
@@ -699,7 +720,7 @@ thread is allowed to continue beyond the barrier
     - t_f = a fixed time
     - t_b = a time per byte
     - l = number of bytes in the message
-  - efficient message passing = t_b * l >> t_f
+  - **efficient message passing** = t_b * l >> t_f
   - > [2017s2 Q4a 10marks] Consider two processors, A and B, each having a sorted list of k integers.  
   Consider the problem of finding the k smallest integers from the combined 2k integers, i.e. where the answer should be available on processor A.  
   One trivial way to do this is for processor B to send its entire list to processor A, and then A merges them to obtain the smallest k.  
@@ -724,31 +745,59 @@ is startup time and td is the time to send an integer.
       ```
 - Parallel run time: t_p
   - t_p = t_comp + t_comm
+    - assume both t_... in same units
     - t_comp: computation time
     - t_comm: communication time
   - speedup: S
     - S = t_s / t_p
-      - t_s: sequential time
+      - t_s: sequential time or time steps
 - Delay hiding [6]
   - = when t_p not valid?
   - Communication and computation can happen at the same time
   - Part of the art of parallel programming is making sure that all processors/processes have enough data to keep them busy
+  - Disadvantage: May incur extra fixed set-up costs, t_f
 - Granularity [7]
   - granularity = t_comp / t_comm
-  - tradeoff between parallelism and communication
+  - tradeoff between parallelism and communication [see slide]
 - Communication primitives [8]
   - what are the basic tasks happen when send data
-- send() and receive() [9, 10]
+  - |primitive|def|when need it?|disadvantage
+    |---|---|---|---|
+    |block send|caller will be blocked until the function returns (receiver actually received)<br/> 1. caller call send()<br/>2. add data to sender buffer<br/>3. send data<br/>4. receiver call receive() and receive data from recevier buffer<br/>5. send "received" confirm back to sender<br/>6. sender delete data from sender buffer<br/>7. caller return|1. block as insufficient information to continue in program<br/>2. useful for loose synchronization (as below 2 don't ensure the receiver has received)
+    |local block send|caller won't be blocked (by waiting for receiver actually received)<br/><u>At step 2, **Will block if sender buffer is full.**</u><br/>(return step7 after step2)||1. might have deadlock and cause blocking <br/>(deadlock: sender buffer is full will receiver don't send confirm back)
+    |non-block send|send will keep sending in the background<br/><u>At step 2, **Discard data if sender buffer is full.**</u><br/>|1. useful for small chunk independent data task, like realtime weather data calculation (losing some data is not a problem, **don't want to be blocked as has sufficient information to continue**)
+    ||||
+    |block receive|will not return until a message has been received.|1. block as insufficient information to continue in program
+    |non-block receive|will return immediately with either a message (if one was buffered and waiting to be received) or no message|1. useful if do calculation when received newly updated data<br/>|1. wastes CPU cycles if called too many times without a message being received
+  - There may be several messages waiting in the receive buffer to be received. 
+    - The recv() function will usually receive **at most one message per call**.
   - send/receive(destination identifier, message type, data type and contents)
-  - blocking or or local-blocking non-blocking [11, 12, 13, 14]
-    - non-blocking(): send will keep sending in the background
-    - non-blocking(): receive will typically return whatever data has been received so far, and indicate to the caller how much has been read [15]
   - Blocking and non-blocking connote (意味着) synchronous and asynchronous communication. [16]
 - Communication patterns [17-26]
   - Why we need communication pattern?
-    - Distributed memory architectures require message passing and this in turn leads to communication patterns.
-    - Shared memory parallel programs don't explicitly use communication patterns
-    - Distributed shared memory architecture needs
+    - parallel machine perspective
+      - |who|need communication pattern|why?
+        |---|---|---|
+        |Distributed memory architecture|Y|require message passing between processors to access remote memory and this in turn leads to communication patterns
+        |Shared memory architecture|N
+        | Distributed shared memory architecture|Y
+    - parallel algorithm complexity perspective
+      - While parallel algorithm complexity is a governed by the machine’s architecture upon which it executes, there are further aspects that can be considered, how messages are transmitted through the machine and what impact this can have on performance. 
+      - These considerations need to address the communication patterns that are required by parallel algorithms.
+  - efficient implementation of below often **depends on** the physical architecture of the machine.
+    - N: #nodes
+    - |primitive|source|destination|def|useful when|
+      |---|---|---|---|---|
+      |unicast|1 node|1 node|one to one send single data
+      |broadcast|1 node, 1 data|N nodes, 1 data|one send single data to each node|initialize many worker tasks
+      |gather|N nodes, 1 data per node|1 node, N data|collect 1 data from each node to the same single node|1. collect answers from calculations farmed out to worker tasks.<br/> 2. reduce in the map/reduce framework
+      |scatter| 1 node, N data| N nodes, 1 data per node|one split N data to each node evenly|1. assign sub-problems to worker tasks<br/> 2. map in the map/reduce framework
+      |gather/broadcast|N nodes, 1 data per node|N nodes, N data per node|sends 1 data from each node to every node|MPI_ALLGather
+      |gather/scatter|N nodes, N data per node|N nodes, N data per node|sends each data from arrays at each node to a different node|transpose [23]
+      |reduce|N nodes, 1 arithmetic combined data|1 node, 1 f(data)|sends the result of a mathematical function over the data items from each node to a <u>**single node**</u>|[24]
+      |reduce/broadcast|N nodes, 1 arithmetic combined data|N nodes, same f(data) per node|sends the result of a mathematical function over the data items from each node to <u>**all nodes**</u>|[25]
+      |prefix|N nodes, 1 arithmetic combined data|N nodes, different f(data) per node|sends the result of a <u>**different mathematical function over the data itemss**</u> to <u>**each node**</u>|[26]
+    
 ## 04b OpenMPI
 
 ## 05 prefix sum
