@@ -26,6 +26,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
   - [08 cuda](#08-cuda)
   - [09 interconnection network](#09-interconnection-network)
     - [static netwrok algorithm](#static-netwrok-algorithm)
+    - [Embedding](#embedding)
   - [10 systolic](#10-systolic)
 
 <!-- /TOC -->
@@ -620,7 +621,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
 - SPMD and MPMD [20]
   |||def|Framework
   |---|---|---|---|
-  |SPMD|Single Program Multiple Data|a single program that executes on a different portion of the data|OpenMP #pragma for<br />OpenMPI<br />OpenCL
+  |SPMD|Single Program Multiple Data|a single program that executes on a different portion of the data|OpenMP #pragma for<br />OpenMPI<br />OpenCL <br/> { data parallel }
   |MPMD|Multiple Program Multiple Data|1. different programs are written, for different threads<br /> 2. one thread may be a "master" thread, with different code from "worker" threads|OpenMP #pragma sections/single
 - |parallelism model||suitable when||
   |---|---|---|---|
@@ -1170,9 +1171,6 @@ determining the latency for the memory access or communication.
       - mesh has a constant time degree which makes it has a lower wiring complexity of the architecture if there are a lot of nodes in the network
       - mesh has planarity which makes it useful for integrated circuits as it eliminates the need for multiple layers
       - Different networks, such as two-dimensional meshes and trees, can be embedded in an n-cube in such a way that the connectivity between neighboring nodes remains consistent with their definition. 
-    - > [2019s2 Q5c 5marks] Prove that any algorithm running in time T in a two-dimensional
-mesh of size n\*n processors can be executed in a one-dimensional mesh (i.e. a linear array) of n^2 processors in O(n T) time.
-      - [page 17 bottom](http://cs.brown.edu/people/jsavage/book/pdfs/ModelsOfComputation_Chapter7.pdf)
   - switching networks
     - switch  
       <img width="70%" src="./docs/9.jpg"/>
@@ -1275,6 +1273,15 @@ Write a parallel algorithm that implements the butterfly barrier on a hypercube 
 Assuming each edge of the mesh can send one element per time step (in both directions),  
 describe the communication steps required to transpose the matrix over the mesh, i.e. so that processor (i, j) obtains a_{j,i}. How many steps in total does this take?
   - TODO no idea. sqrt(n) steps?
+### Embedding
+- Embedding of 1D Arrays in 2D Meshes
+  - [snake ordering page 17](http://cs.brown.edu/people/jsavage/book/pdfs/ModelsOfComputation_Chapter7.pdf)
+- Embedding of 2D Meshes ub 1D Arrays
+  - > [2019s2 Q5c 5marks] Prove that any algorithm running in time T in a two-dimensional
+mesh of size n\*n processors can be executed in a one-dimensional mesh (i.e. a linear array) of n^2 processors in O(n T) time.
+      - [page 17 bottom](http://cs.brown.edu/people/jsavage/book/pdfs/ModelsOfComputation_Chapter7.pdf)
+-  Embedding Arrays in Hypercubes
+   - [page 19](http://cs.brown.edu/people/jsavage/book/pdfs/ModelsOfComputation_Chapter7.pdf)
 ## 10 systolic
 - Different from PRAM model
   - no shared memory between processors
