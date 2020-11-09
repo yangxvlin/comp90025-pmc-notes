@@ -1126,21 +1126,30 @@ is startup time and td is the time to send an integer.
         <img width="50%" src="./docs/8.jpg"/>
     - > [2018s2 Q1d 4marks]  Define the diameter and degree of a static interconnection network.  
         Explain why these two properties are important from a parallel computer architecture perspective and explain the tradeoff between them.
-        - We want a small diameter because communication complexity is determined by the diameter of the architecture: either impacting the total time for sending a message or lower bounding the best runtime of an algorithm for that architecture. We want a small degree because it reduces the wiring complexity of the architecture, which makes it easier to physically build. They are important because of the cost = degree * diameter. It is desirable to achieve a low cost. Consequently, small degree and diameter at the same time is desirable. The tradeoff is a decreasing degree might an increasing diameter which is the tradeoff. As a result, we need to find a balance between them to achieve a low cost.
+        - We want a small diameter because communication complexity is determined by the diameter of the architecture: either impacting the total time for sending a message or lower bounding the best runtime of an algorithm for that architecture. 
+        - We want a small degree because it reduces the wiring complexity of the architecture, which makes it easier to physically build. 
+        - They are important because of the cost = degree * diameter. It is desirable to achieve a low cost. 
+          - Consequently, small degree and diameter at the same time is desirable. 
+        - The tradeoff is a decreasing degree might an increasing diameter which is the tradeoff. As a result, we need to find a balance between them to achieve a low cost.
     - > [2017s2 Q1b 4marks] How does our notion of algorithm optimality change when, rather than shared memory, we consider algorithms that run on an architecture such as a mesh or hypercube?
-      - Rather than considering work = sequential time complexity or parallel algorithm has polylogarithmic runtime, the optimal complexity of an algorithm run on a static network is lower bounded (usually) by the diameter of the architecture; e.g. for a mesh of n nodes, sorting can't be any better than \sqrt(n) runtime. For any hardware that doesn't have shared memory with O(1) access time, the communication network affects the delay.
+      - Rather than considering work = sequential time complexity or parallel algorithm has polylogarithmic runtime, the optimal complexity of an algorithm run on a static network is lower bounded (usually) by the diameter of the architecture; e.g. for a mesh of n nodes, sorting can't be any better than sqrt(n) runtime. 
+      - For any hardware that doesn't have shared memory with O(1) access time, the communication network affects the delay.
     - |Topological property|def|when useful
       |---|---|---|
-      |degree/cost to build|d = maximum number of edges connected to a single vertex in the graph
-      |diameter/communication delay|k = the minimum number of edges a message must traverse in order to be communicated between any two vertices in the graph
+      |degree/cost to build|d = maximum number of edges connected to a single vertex in the graph|see [2018s2 Q1d]
+      |diameter/communication delay|k = the minimum number of edges a message must traverse in order to be communicated between any two vertices in the graph|see [2018s2 Q1d]
       |cost|c = d*k|a compromise between d and k<br />it is desirable to achieve a low cost for static network
       |||
       |(edge) bisection width|smallest number of edges that, when cut, would separate the network into two halves|useful for reliability
       |planarity|Can the network be embedded in a plane without any edges crossing|useful for integrated circuits as it eliminates the need for multiple layers = 简化physical建造的难度
       |symmetry|Are all nodes topologically the same|easier to construct in hardware
+      - latency: The number of “hops” that a message requires is a dominant factor
+determining the latency for the memory access or communication.
     - n vertices  
-      |network||d|k|c = d*k|bisection|planarity|symmetric|disadv
+      |network||d|k|c = d*k|bisection|planarity|symmetric|disadv/adv
       |---|---|---|---|---|---|---|---|---|
+      |shared bus||1
+      |||||||||
       |linear array|[12]|2|O(n)|O(n)|1|y
       |||||||||
       |ring|[13]|2|floor(n/2)<br/>= half of the ring|O(n)|2|y
@@ -1148,22 +1157,22 @@ is startup time and td is the time to send an integer.
       |completely connected|[16]|n-1|1|O(n)
       |Barrel shifter, t = log2 n|[17]|2t-1|t/2|O(t^2)<br />= O((log2 n)^2)|good|
       |||||||||
-      |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j|sqrt(n)|y
+      |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j|sqrt(n)|y|n
       |torus|[19]|4|sqrt(n)+1|O(sqrt(n))|||y
       |||||||||
       |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|n/2
       |Cube Connected Cycles<br/>n = t 2^t<br/>t = O(log n/ log log n)|[21]|3|2t + floor(t/2) - 2, t>3|**O(t) = O(log n/ log log n)**|
       |||||||||
       |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||y||traffic on top nodes are busy
-      |fat tree|[24]
+      |fat tree|[24]|3||||||Since its communication bandwidth can be scaled independently from the number of processors, it provides great flexibility in design. 
       |K-ary fat tree|[25]
     - > [2019s2 Q5a 3marks] A mesh network has a relatively high cost as measured by degree times diameter, compared to other networks like the hypercube and tree. However, it is a justifiable choice for an interconnection network. Give 3 reasons why.
-      - mesh has a constant time degree which makes it has a lower wiring complexity of the architecture
+      - mesh has a constant time degree which makes it has a lower wiring complexity of the architecture if there are a lot of nodes in the network
       - mesh has planarity which makes it useful for integrated circuits as it eliminates the need for multiple layers
-      - TODO no idea
+      - Different networks, such as two-dimensional meshes and trees, can be embedded in an n-cube in such a way that the connectivity between neighboring nodes remains consistent with their definition. 
     - > [2019s2 Q5c 5marks] Prove that any algorithm running in time T in a two-dimensional
 mesh of size n\*n processors can be executed in a one-dimensional mesh (i.e. a linear array) of n^2 processors in O(n T) time.
-      - TODO no idea
+      - [page 17 bottom](http://cs.brown.edu/people/jsavage/book/pdfs/ModelsOfComputation_Chapter7.pdf)
   - switching networks
     - switch  
       <img width="70%" src="./docs/9.jpg"/>
