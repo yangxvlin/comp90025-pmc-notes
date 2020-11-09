@@ -1100,15 +1100,19 @@ is startup time and td is the time to send an integer.
     - b: #buses
     - m: #memories
     - p: #processors
-    - |Multi-bus systems||connections||
+    - |Multi-bus systems||connections|notes|
       |---|---|---|---|
-      |full b-bus memory connection system|[3]|b(p+m)
-      |partial b-bus memory connection system|[4]|b(p+m/g), 1<g<b
+      |full b-bus memory connection system|[3]|b(p+m)|one bus has p+m connections ans we have b bus here
+      |partial b-bus memory connection system|[4]|b(p+m/g), 1<g<b |make sure use appropriate bus to modify memory (each processor can has access to all memories through various buses)
       |single b-bus memory connection system|[5]|bp+m|each processor has connection to a memory, but one can write at each time
-    - bandwidth O(1/p)
+    - bandwidth O(1/p), if p nodes are requesting
       - all p nodes on a bus are continuously requesting access then a bus can supply O(1/p) of its available bandwidth to each node.
     - minimum latency O(1) for each bus
       - with no contention, is constant or O(1) (which ignores signal propagation delay)
+    - bus architecture
+      - Access to a bus is arbitrated by a bus master.
+      - Each node on a bus has a bus master which requests access to the bus, called a <u>**bus request**</u>, when then node requires to use the bus. This is a global request sent to all nodes on the bus.
+      - The node that currently has access to the bus responds with either a <u>**bus grant**</u> or a <u>**bus busy signal**</u>, which is also globally known to all bus masters.
     - > [2019s2 Q5b 2marks] Name and explain an advantage and a disadvantage of using a bus for a shared-memory computer, compared with other architectures.
       - TODO check correctness
       - adv: easy to add new processor/memory to the system
@@ -1124,7 +1128,7 @@ is startup time and td is the time to send an integer.
         Explain why these two properties are important from a parallel computer architecture perspective and explain the tradeoff between them.
         - We want a small diameter because communication complexity is determined by the diameter of the architecture: either impacting the total time for sending a message or lower bounding the best runtime of an algorithm for that architecture. We want a small degree because it reduces the wiring complexity of the architecture, which makes it easier to physically build. They are important because of the cost = degree * diameter. It is desirable to achieve a low cost. Consequently, small degree and diameter at the same time is desirable. The tradeoff is a decreasing degree might an increasing diameter which is the tradeoff. As a result, we need to find a balance between them to achieve a low cost.
     - > [2017s2 Q1b 4marks] How does our notion of algorithm optimality change when, rather than shared memory, we consider algorithms that run on an architecture such as a mesh or hypercube?
-      - Rather than considering work = sequential time complexity or parallel algorithm has polylogarithmic runtime, the optimal complexity of an algorithm run on a static network is lower bounded (usually) by the diameter of the architecture; e.g. for a mesh of n nodes, sorting can't be any better than \sqrt(n) runtime.
+      - Rather than considering work = sequential time complexity or parallel algorithm has polylogarithmic runtime, the optimal complexity of an algorithm run on a static network is lower bounded (usually) by the diameter of the architecture; e.g. for a mesh of n nodes, sorting can't be any better than \sqrt(n) runtime. For any hardware that doesn't have shared memory with O(1) access time, the communication network affects the delay.
     - |Topological property|def|when useful
       |---|---|---|
       |degree/cost to build|d = maximum number of edges connected to a single vertex in the graph
@@ -1165,6 +1169,7 @@ mesh of size n\*n processors can be executed in a one-dimensional mesh (i.e. a l
       <img width="70%" src="./docs/9.jpg"/>
     - With switching networks, the hardware cost is no longer proportional to the degree d. 
       - Instead, we measure the **complexity = the number of switching elements**
+      - For any hardware that doesn't have shared memory with O(1) access time, the communication network affects the delay.
     - the optimal complexity's definition changes for algorithm run the switch network?
       - Yes, since the communication is bounded by the switching network, and it is a function of the minimum latency of the switching network.
     - n = number of inputs and outputs
