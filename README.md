@@ -411,6 +411,13 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
     |T(n)|O(n)
   - similar to optimal EREW pattern (1)
     - except no O(log p) because we use localVar instead of localArr (no race condition beacuse we have COMMON), so no parallelize reduce just return
+- COMMON Maximum [45]
+  - |||
+    |---|---|
+    |input size|n^2
+    |t(n)|O(1) steps
+    |p(n)|n^2
+    |T(n)|O(n)
 - Suboptimal COMMON Maximum [47]
   - |||
     |---|---|
@@ -418,6 +425,11 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
     |t(n)|O(log log n) steps
     |p(n)|n^2
     |T(n)|O(n)
+  - > [2011s2 Q6 8marks] Finding the maximum of a list of numbers is a fundamental operation.
+    - > [2011s2 Q6a] Show how to compute the maximum of n numbers in 0(1) time using n^2 processors on a CRCW PRAM.
+      - COMMON Maximum
+    - > [2011s2 Q6b] Show a recursive algorithm to compute the maximum of n^2 numbers in O(log log n) time using n^2 processors on a CRCW PRAM. Your recursive algorithm may make use of your algorithm above.
+      - Suboptimal COMMON Maximum
 - COMMON SimulatePriority [57]
   - |||
     |---|---|
@@ -503,30 +515,6 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
         
         return res
     ```
-- COMBINE Mamimum
-  - > [2011s2 Q6 8marks] Finding the maximum of a list of numbers is a fundamental operation.
-    - > [2011s2 Q6a] Show how to compute the maximum of n numbers in 0(1) time using n^2 processors on a CRCW PRAM.
-      - |||
-        |---|---|
-        |input size|n
-        |t(n)|O(1) steps
-        |p(n)|p = O(n^2)
-        |T(n)|O(n)
-    - ```
-      combine_int_max(a, b) = write max(a, b) to a
-
-      COMBINE CRCW substring_occurance(inputs, n, p)
-          initialize res = INT_MIN
-    
-          # O(1) step
-          do in processors (a, 1) for a from 0 to n-1:
-              combine_int_max(res, inputs[a])
-          
-          return res
-      ```
-      - TODO
-    - > [2011s2 Q6b] Show a recursive algorithm to compute the maximum of n^2 numbers in O(log log n) time using n^2 processors on a CRCW PRAM. Your recursive algorithm may make use of your algorithm above.
-      - TODO
 ### CREW algorithm
 - CREW search
   - |||
@@ -1106,6 +1094,7 @@ is startup time and td is the time to send an integer.
       |full b-bus memory connection system|[3]|b(p+m)|one bus has p+m connections ans we have b bus here
       |partial b-bus memory connection system|[4]|b(p+m/g), 1<g<b |make sure use appropriate bus to modify memory (each processor can has access to all memories through various buses)
       |single b-bus memory connection system|[5]|bp+m|each processor has connection to a memory, but one can write at each time
+      |||less connecction, less complexity (easier) to build
     - bandwidth O(1/p), if p nodes are requesting
       - all p nodes on a bus are continuously requesting access then a bus can supply O(1/p) of its available bandwidth to each node.
     - minimum latency O(1) for each bus
@@ -1115,8 +1104,7 @@ is startup time and td is the time to send an integer.
       - Each node on a bus has a bus master which requests access to the bus, called a <u>**bus request**</u>, when then node requires to use the bus. This is a global request sent to all nodes on the bus.
       - The node that currently has access to the bus responds with either a <u>**bus grant**</u> or a <u>**bus busy signal**</u>, which is also globally known to all bus masters.
     - > [2019s2 Q5b 2marks] Name and explain an advantage and a disadvantage of using a bus for a shared-memory computer, compared with other architectures.
-      - TODO check correctness
-      - adv: easy to add new processor/memory to the system
+      - adv: the ability to do bus snooping to keep the caches coherent and easy to add new processor/memory to the system
       - disadv: has a communication bottleneck, all p nodes on a bus are continuously requesting access then a bus can supply O(1/p) of its available bandwidth to each node.
   - static networks (point-to-point networks)
     - = fixed point-to-point connections between modules
@@ -1143,7 +1131,7 @@ is startup time and td is the time to send an integer.
       |||
       |(edge) bisection width|smallest number of edges that, when cut, would separate the network into two halves|useful for reliability
       |planarity|Can the network be embedded in a plane without any edges crossing|useful for integrated circuits as it eliminates the need for multiple layers = 简化physical建造的难度
-      |symmetry|Are all nodes topologically the same|easier to construct in hardware
+      |symmetry|Are all nodes topologically the same (same degree for each node)|easier to construct in hardware
       - latency: The number of “hops” that a message requires is a dominant factor
 determining the latency for the memory access or communication.
     - n vertices  
@@ -1151,20 +1139,20 @@ determining the latency for the memory access or communication.
       |---|---|---|---|---|---|---|---|---|
       |shared bus||1
       |||||||||
-      |linear array|[12]|2|O(n)|O(n)|1|y
+      |linear array|[12]|2|O(n)|O(n)|1|y|n
       |||||||||
-      |ring|[13]|2|floor(n/2)<br/>= half of the ring|O(n)|2|y
-      |chordal ring|[14]|3|n/3|O(n)
-      |completely connected|[16]|n-1|1|O(n)
-      |Barrel shifter, t = log2 n|[17]|2t-1|t/2|O(t^2)<br />= O((log2 n)^2)|good|
+      |ring|[13]|2|floor(n/2)<br/>= half of the ring|O(n)|2|y|y
+      |chordal ring|[14]|3|n/3|O(n)||y if d=3|y
+      |completely connected|[16]|n-1|1|O(n)|||y
+      |Barrel shifter, t = log2 n|[17]|2t-1|t/2|O(t^2)<br />= O((log2 n)^2)|good||y
       |||||||||
       |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j|sqrt(n)|y|n
       |torus|[19]|4|sqrt(n)+1|O(sqrt(n))|||y
       |||||||||
-      |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|n/2
-      |Cube Connected Cycles<br/>n = t 2^t<br/>t = O(log n/ log log n)|[21]|3|2t + floor(t/2) - 2, t>3|**O(t) = O(log n/ log log n)**|
+      |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|n/2||y
+      |Cube Connected Cycles<br/>n = t 2^t<br/>t = O(log n/ log log n)|[21]|3|2t + floor(t/2) - 2, t>3|**O(t) = O(log n/ log log n)**||y if d=3|y
       |||||||||
-      |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||y||traffic on top nodes are busy
+      |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||y|n|traffic on top nodes are busy
       |fat tree|[24]|3||||||Since its communication bandwidth can be scaled independently from the number of processors, it provides great flexibility in design. 
       |K-ary fat tree|[25]
     - > [2019s2 Q5a 3marks] A mesh network has a relatively high cost as measured by degree times diameter, compared to other networks like the hypercube and tree. However, it is a justifiable choice for an interconnection network. Give 3 reasons why.
@@ -1194,6 +1182,7 @@ determining the latency for the memory access or communication.
 - Ring Broadcast
   - [L2019 "Hypercube and Embeddings" 2]
 - Mesh broadcast
+  - t(n) = O(m + n) steps, m row n column
   - [L2019 "Hypercube and Embeddings" 3-5]
 - Hybercube broadcast
   - [L2019 "Hypercube and Embeddings" 3, 7]
@@ -1267,8 +1256,8 @@ Write a parallel algorithm that implements the butterfly barrier on a hypercube 
 - Mesh bitonic sort
   - [link](http://www.seerc.org/wmc8/procedings_web/pages205-226.pdf)
 - Mesh UniqueElements
-  - [2016s2 Q4b 8marks] Consider a mesh of size sqrt(n) \* sqrt(n) nodes, where each node of the mesh contains an integer. The uniqueness problem is to determine whether all of the integers are unique. Consider a parallel algorithm that results in every node of the mesh knowing the result of the uniqueness problem. Show how this can be done in O(n log n) steps.
-    - TODO no idea
+  - > [2016s2 Q4b 8marks] Consider a mesh of size sqrt(n) \* sqrt(n) nodes, where each node of the mesh contains an integer. The uniqueness problem is to determine whether all of the integers are unique. Consider a parallel algorithm that results in every node of the mesh knowing the result of the uniqueness problem. Show how this can be done in O(n log n) steps.
+    - TODO
 - > [2017s2 Q4b 10marks] Consider an n × n mesh network, where each processor, (i, j), i, j ∈ {1, 2, . . . , n}, contains an element a_{i,j} of a matrix A.   
 Assuming each edge of the mesh can send one element per time step (in both directions),  
 describe the communication steps required to transpose the matrix over the mesh, i.e. so that processor (i, j) obtains a_{j,i}. How many steps in total does this take?
