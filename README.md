@@ -1131,9 +1131,13 @@ is startup time and td is the time to send an integer.
       |||
       |(edge) bisection width|smallest number of edges that, when cut, would separate the network into two halves|useful for reliability
       |planarity|Can the network be embedded in a plane without any edges crossing|useful for integrated circuits as it eliminates the need for multiple layers = 简化physical建造的难度
-      |symmetry|Are all nodes topologically the same (same degree for each node)|easier to construct in hardware
+      |symmetry|Are all nodes topologically the same (same degree for each node)|easier to construct in hardware<br />adv & disadv see below
       - latency: The number of “hops” that a message requires is a dominant factor
 determining the latency for the memory access or communication.
+      - If symmetric, easier to allocate processes to processors in a symmetric graph.  
+        - However, asymmetric graphs like trees sometimes allow a more optimal allocation.
+      - If symmetric (all nodes have the same degree), then they all use the same hardware.  
+        - That means that you don't need to have so many different types of spare parts.  (It sounds trivial, but is actually a big issue for very large systems like Google's and Amazon's.)
     - n vertices  
       |network||d|k|c = d*k|bisection|planarity|symmetric|disadv/adv
       |---|---|---|---|---|---|---|---|---|
@@ -1147,14 +1151,15 @@ determining the latency for the memory access or communication.
       |Barrel shifter, t = log2 n|[17]|2t-1|t/2|O(t^2)<br />= O((log2 n)^2)|good||y
       |||||||||
       |mesh, n = i*j|[18]|4|2sqrt(n)|O(sqrt(n)) if i==j|sqrt(n)|y|n
-      |torus|[19]|4|sqrt(n)+1|O(sqrt(n))|||y
+      |torus|[19]|4|sqrt(n)+1|O(sqrt(n))|2i if i even or 2j if j even <br/> [how to halve](https://canvas.lms.unimelb.edu.au/courses/17524/discussion_topics/361952)||y
       |||||||||
       |hypercube, t = log2 n|[20]|t|t|O(t^2)<br />= O((log2 n)^2)|n/2||y
       |Cube Connected Cycles<br/>n = t 2^t<br/>t = O(log n/ log log n)|[21]|3|2t + floor(t/2) - 2, t>3|**O(t) = O(log n/ log log n)**||y if d=3|y
       |||||||||
-      |tree, t = log n|[23]|t|log_t n|O(t log_t n) = O((log n)^2 / log log n)||y|n|traffic on top nodes are busy
+      |tree, t = log n|[23]|t (chosen to minimize the cost)|log_t n|O(t log_t n) = O((log n)^2 / log log n)|see [tree bisection]|y|n|traffic on top nodes are busy
       |fat tree|[24]|3||||||Since its communication bandwidth can be scaled independently from the number of processors, it provides great flexibility in design. 
       |K-ary fat tree|[25]
+      - [tree bisection] a balanced binary tree always has an odd #nodes, and so it cannot be split into two equal pieces.
     - > [2019s2 Q5a 3marks] A mesh network has a relatively high cost as measured by degree times diameter, compared to other networks like the hypercube and tree. However, it is a justifiable choice for an interconnection network. Give 3 reasons why.
       - mesh has a constant time degree which makes it has a lower wiring complexity of the architecture if there are a lot of nodes in the network
       - mesh has planarity which makes it useful for integrated circuits as it eliminates the need for multiple layers
