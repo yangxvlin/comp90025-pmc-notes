@@ -1105,7 +1105,7 @@ is startup time and td is the time to send an integer.
 - Algorithms can be loosely classified as 1+ of:
   - |||e.g.|
     |---|---|---|
-    |embarrassingly parallel|first three are pretty overlap. break massive data (can't be solved on one supercomputer) to several independent pieces and processed. Thus get parallelism so easily|grid computing
+    |embarrassingly parallel|first three are pretty overlap. break massive data (can't be solved on one supercomputer) to several independent pieces and processed. Thus get parallelism so easily (having little to no dependency between tasks and requiring minimal communication)|grid computing
     |parametric|first three are pretty overlap. A parametric problem is a data parallel problem. Divide problem based on a parameter space (parameter space can be very large). You have a parameter define the problem space and values for a given set of parameters define one instance of the computation can be done independently.
     |data parallel|first three are pretty overlap. easy to break down to disjoint piece that can be distributed to different process and done independently. Results are put together afterwards
     |task parallel|have different computing done for different task. like a pipline (different stage of computation, you get parallelism because you run various instance of the problem concurrently)|dynamic loading
