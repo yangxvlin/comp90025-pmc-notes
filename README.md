@@ -784,7 +784,7 @@ is startup time and td is the time to send an integer.
     - parallel algorithm complexity perspective
       - While parallel algorithm complexity is a governed by the machine’s architecture upon which it executes, there are further aspects that can be considered, how messages are transmitted through the machine and what impact this can have on performance. 
         - These considerations need to address the communication patterns that are required by parallel algorithms.
-  - efficient implementation of below often **depends on** the physical architecture of the machine.
+  - efficient implementation of below communication pattern often **depends on** the physical architecture of the machine.
     - N: #nodes
     - |primitive|source|destination|def|useful when|
       |---|---|---|---|---|
@@ -799,7 +799,44 @@ is startup time and td is the time to send an integer.
       |prefix|N nodes, 1 arithmetic combined data|N nodes, different f(data) per node|sends the result of a <u>**different mathematical function over the data itemss**</u> to <u>**each node**</u>|[26]
     
 ## 04b OpenMPI
-
+  - ```int MPI_Init(int *argc , char *** argv)```
+    - Must be the first MPI procedure called.
+    - e.g.: ```MPI_Init(&argc , &argv);```
+  - ```int MPI_Finalize()```
+    - Must be the last MPI procedure called, no other MPI routines may be called after it.
+  - ```MPI_COMM_WORLD comm;```
+    - MPI uses *communicators* to define which collection of processes may communicate with each other.
+      - MPI_COMM_WORLD is the predefined communicator that includes all of your MPI processes.
+    - Most MPI routines require you to specify a communicator as an argument.
+  - ```MPI_Comm_rank( MPI_Comm comm , int * rank)```
+    - Can’t compare with other communicators
+    - e.g.: ```MPI_Comm_rank(comm , &rank);```
+  - ```MPI_Comm_size( MPI_Comm comm , int * size)```
+    - e.g.: ```MPI_Comm_size(comm , &size);```
+  - ```int MPI_Send( void *buf , int count , MPI_Datatype datatype , int dest , int tag , MPI_Comm comm)```
+    - block send
+    - Note:
+      - Sender must specify a valid destination rank.
+      - The communicator must be the same.
+      - Tags must match.
+      - Message types must match.
+    - e.g.: ```int x; MPI_Send(&x, 1, MPI_INT , 3, 0, comm);```
+  - ```int MPI_Recv(void *buf , int count , MPI_Datatype datatype , int source , int tag , MPI_Comm comm , MPI_Status *status)```
+    - block recv
+    - Status indicates the source of the message (status.source), the tag of the message(status.tag), and actual number of bytes received
+    - Note: 
+      - Receiver must specify a valid source rank.
+      - The communicator must be the same.
+      - Tags must match.
+      - Receiver’s buffer must be large enough.
+    - e.g.: ```int y; MPI_STATUS status; MPI_Recv(&y, 1, MPI_INT , 1, 0, comm , &status);```
+  - ```int MPI_Barrier(MPI_Comm comm)```
+    - Creates a barrier synchronization in a group.
+      - When reaching the MPI_Barrier call, each task blocks until all tasks in the group reach the same MPI_Barrier call.
+    - **Used less than** in shared-memory synchronization, because we’re not waiting for data structures in memory to become ready.
+    - **Useful** if we are sharing an OS resource that is not controlled by MPI
+      - e.g., wanting to write output in the “correct” order
+  - TODO
 ## 05 prefix sum
 - sequential prefix sum (or other dyadic operation)
   - |||
