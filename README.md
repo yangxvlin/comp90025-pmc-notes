@@ -669,7 +669,8 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
         - Describes how iterations of the loop are divided among the threads in the team.
         - |scheduler|adv|disadv
           |---|---|---|
-          |Dynamic|better when the iterations may take very different amounts of time|has scheduler overhead <br />After each iteration, the threads must stop and receive a new value of the loop variable to use for its next iteration.
+          |Static|can help with contiguous memory access (= fast memory access)|bad for varying workloads -- spreads the work out not evenly between threads (dynamic can)
+          |Dynamic|better when the iterations may take very different amounts of time|has scheduler overhead <br />As after each iteration, the threads must stop and receive a new value of the loop variable to use for its next iteration.
           |Guided|allows a tradeoff: <br /> 1. less overhead than dynamic <br />2. better splitting of workload among threads than static.
       - ORDERED clause [30]
         - Specifies that the iterations of the loop must be executed as they would be in a serial program.
