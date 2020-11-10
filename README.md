@@ -1505,7 +1505,7 @@ Write a parallel algorithm that implements the butterfly barrier on a hypercube 
 - > [2017s2 Q4b 10marks] Consider an n × n mesh network, where each processor, (i, j), i, j ∈ {1, 2, . . . , n}, contains an element a_{i,j} of a matrix A.   
 Assuming each edge of the mesh can send one element per time step (in both directions),  
 describe the communication steps required to transpose the matrix over the mesh, i.e. so that processor (i, j) obtains a_{j,i}. How many steps in total does this take?
-  - TODO no idea. sqrt(n) steps?
+  - 2n steps?
 ### Embedding
 - Embedding of 1D Arrays in 2D Meshes
   - [snake ordering page 17](http://cs.brown.edu/people/jsavage/book/pdfs/ModelsOfComputation_Chapter7.pdf)
