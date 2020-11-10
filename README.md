@@ -1501,7 +1501,7 @@ Write a parallel algorithm that implements the butterfly barrier on a hypercube 
   - [link](http://www.seerc.org/wmc8/procedings_web/pages205-226.pdf)
 - Mesh UniqueElements
   - > [2016s2 Q4b 8marks] Consider a mesh of size sqrt(n) \* sqrt(n) nodes, where each node of the mesh contains an integer. The uniqueness problem is to determine whether all of the integers are unique. Consider a parallel algorithm that results in every node of the mesh knowing the result of the uniqueness problem. Show how this can be done in O(n log n) steps.
-    - TODO
+    - Sorting may be a useful start.
 - > [2017s2 Q4b 10marks] Consider an n × n mesh network, where each processor, (i, j), i, j ∈ {1, 2, . . . , n}, contains an element a_{i,j} of a matrix A.   
 Assuming each edge of the mesh can send one element per time step (in both directions),  
 describe the communication steps required to transpose the matrix over the mesh, i.e. so that processor (i, j) obtains a_{j,i}. How many steps in total does this take?
