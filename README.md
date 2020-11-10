@@ -794,7 +794,7 @@ is startup time and td is the time to send an integer.
       |scatter| 1 node, N data| N nodes, 1 data per node|one split N data to each node evenly|1. assign sub-problems to worker tasks<br/> 2. map in the map/reduce framework
       |gather/broadcast|N nodes, 1 data per node|N nodes, N data per node|sends 1 data from each node to every node|MPI_ALLGather
       |gather/scatter|N nodes, N data per node|N nodes, N data per node|sends each data from arrays at each node to a different node|transpose [23]
-      |reduce|N nodes, 1 arithmetic combined data|1 node, 1 f(data)|sends the result of a mathematical function over the data items from each node to a <u>**single node**</u>|[24]
+      |reduce|N nodes, 1 arithmetic combined data|1 node, 1 f(data)|sends the result of a mathematical function over the data items from each node to a <u>**single node**</u>|[24] f(a, b) aggregate
       |reduce/broadcast|N nodes, 1 arithmetic combined data|N nodes, same f(data) per node|sends the result of a mathematical function over the data items from each node to <u>**all nodes**</u>|[25]
       |prefix|N nodes, 1 arithmetic combined data|N nodes, different f(data) per node|sends the result of a <u>**different mathematical function over the data itemss**</u> to <u>**each node**</u>|[26]
     
