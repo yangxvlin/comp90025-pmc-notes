@@ -122,7 +122,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
     - It allows us to explore how much parallelism we can actually achieve in theory. 
       - So it helps answer the question: is it worthwhile building a computer with more processors or not, for the given problem? 
     - Also, without allowing the number of processors to be a function of problem size, we can not reduce the complexity of the best known sequential algorithm; 
-      - albeit that this reduction in complexity is theoretical. 
+      - although this reduction in complexity is theoretical. 
     - Finally, it is relatively easy to efficiently use less processors than a given parallel algorithm prescribes, while it is relatively hard to devise an algorithm that efficiently uses more processes than a given (parallel) algorithm describes. 
     - So devising an algorithm that shows how to use as many processors as possible is generally more useful.
 - 4 PRAM sub-categories [21]
