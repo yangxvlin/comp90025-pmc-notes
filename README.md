@@ -814,13 +814,29 @@ is startup time and td is the time to send an integer.
   - ```MPI_Comm_size( MPI_Comm comm , int * size)```
     - e.g.: ```MPI_Comm_size(comm , &size);```
   - ```int MPI_Send( void *buf , int count , MPI_Datatype datatype , int dest , int tag , MPI_Comm comm)```
-    - block send
     - Note:
       - Sender must specify a valid destination rank.
       - The communicator must be the same.
       - Tags must match.
       - Message types must match.
     - e.g.: ```int x; MPI_Send(&x, 1, MPI_INT , 3, 0, comm);```
+    - |||guaranteed to be|adv|disadv|
+      |---|---|---|---|---|
+      |MPI_Send|standard Send|may be implemented as synchronous or asynchronous send|the most efficient, since it gives the most flexibility to the system|may cause a lot of confusion
+      |MPI_Ssend|Synchronous Send|synchronous|has synchronization (routine will not return until message has been delivered)|1. sender Idle: wasting CPU cycles unless has multi-thread (sender is waiting for receiver actually received)<br/>2. deadlock (see below)
+      |MPI_Bsend|Asynchronous (Buffered) Send|synchronous|avoid sender Idle: efficient CPU use in sender (routine returns before the message is delivered because system copies data into a (user-supplied) buffer and sends it later on)|1. introuduce extra work (while avoid sender Idle): increased use of CPU cycles compared to Ssend(extra copy of variable to sender buffer) <br/>2. msg miss the order (see below)
+      - ```MPI_Ssend``` and ```MPI_Bsend``` have same signature as MPI_Send
+        - User must provide the buffer before calling ```MPI_Bsend```, using MPI Buffer attach
+      - Note: how MPI_Bsend send data from sender buffer through network depends on physical implementation
+        - send immediately without Recv() called
+        - send when Recv() called
+      - ```MPI_Send``` solves Ssend and Bsend's problems (disadvantages)
+        - buffer space is provided by the system
+        - Send will normally be asynchronous (like Bsend)
+          - if buffer is full, Send becomes synchronous (like Ssend)
+      - Ssend deadlock [33]
+      - Bsend miss the order [34-35]
+        - use ```MPI_ANY_TAG``` [36]
   - ```int MPI_Recv(void *buf , int count , MPI_Datatype datatype , int source , int tag , MPI_Comm comm , MPI_Status *status)```
     - block recv
     - Status indicates the source of the message (status.source), the tag of the message(status.tag), and actual number of bytes received
@@ -836,7 +852,24 @@ is startup time and td is the time to send an integer.
     - **Used less than** in shared-memory synchronization, because we’re not waiting for data structures in memory to become ready.
     - **Useful** if we are sharing an OS resource that is not controlled by MPI
       - e.g., wanting to write output in the “correct” order
-  - TODO
+  - ```int MPI_Bcast(void *buffer , int count , MPI_Datatype datatype , int root , MPI_Comm comm)```
+    - Broadcasts (sends) a message from the process with rank "root" to all other processes in the group.
+    - All the nodes in the group execute this line.
+      - The only difference is the action;
+      - most nodes participate by receiving, while node 0 participates by sending.
+    - e.g.: ```MPI_Bcast(overallmin , 2, MPI_INT , 0, comm);```
+  - ```int MPI_Scatter(void *sendbuf , int sendcount , MPI_Datatype sendtype , void *recvbuf , int recvcount , MPI_Datatype recvtype , int root , MPI_Comm comm )```
+    - Scatter breaks long data into chunks which it parcels out to individual nodes (including itself).
+    - sendtype/sendcount and recvtype/recvcount need to have the same "type signature"
+    - e.g.: ```MPI_Scatter(rand_nums, elements_per_proc, MPI_FLOAT, sub_rand_nums, elements_per_proc, MPI_FLOAT, 0, comm);```
+      - recvcount >= sendcount
+      - sendcount: #data sent to each node
+  - ```int MPI_Gather(void *sendbuf , int sendcount , MPI_Datatype sendtype , void *recvbuf , int recvcount , MPI_Datatype recvtype , int root , MPI_Comm comm)```
+    - recv_count: #data received from each node
+    - ```int MPI_Allgather(&sendbuf , sendcount , sendtype , &recvbuf , recvcount , recvtype , comm )```
+  - ```int MPI_Reduce(void *sendbuf , void *recvbuf , int count , MPI_Datatype datatype , MPI_Op op , int root , MPI_Comm comm)```
+    - count: #elements in send buffer (integer)
+    - e.g.: ```MPI_Reduce(&mysum , &overallsum , 1 , MPI_INT , MPI_SUM , 0, comm);```
 ## 05 prefix sum
 - sequential prefix sum (or other dyadic operation)
   - |||
