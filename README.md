@@ -1317,8 +1317,29 @@ is startup time and td is the time to send an integer.
   - OpenMP: schedule(dynamic)
   - MPI: master-slave with dynamic loading
 ## 08 cuda
+- different hardware components
+- execution hierarchy
+  - 2 constraint:
+    1) SIMP constraint
+    2) independent constraint
+- Memory hierarchy
+  - global, shared, register
+- GPU vs CPU
+- Advantages of using GPUs for parallel computation
+  - The highly parallel structure makes them more efficient than general-purpose CPUs for algorithms where the processing of large blocks of data is done in parallel.
+  - Massively parallel
+  - Highly scalable
+  - Rapidly advancing
+- CUDA
+  - CUDA adv & disadv
+  - CUDA (or other co-processor) processing flow
+  - program execution flow
+    - copy from CPU to GPU
+    - execute
+    - copy result from GPU to CPU
 - > [2011s2 Q8 2marks] <img width="50%" src="./docs/17.png"/>
   - The execution time is not consistent in a 32 threads wrap. Thus, we have divergence within a warp. This is what a GPU cannot do efficiently.
+- https://www.nvidia.com/docs/IO/116711/sc11-perf-optimization.pdf
 
 ## 09 interconnection network
 - why we need it?
