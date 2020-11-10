@@ -1320,7 +1320,7 @@ is startup time and td is the time to send an integer.
 - different hardware components
 - execution hierarchy
   - 2 constraints:
-    1) SIMP constraint
+    1) SIMD constraint
     2) independent constraint
 - Memory hierarchy
   - global, shared, register
