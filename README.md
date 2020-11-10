@@ -802,6 +802,20 @@ is startup time and td is the time to send an integer.
   - ```int MPI_Init(int *argc , char *** argv)```
     - Must be the first MPI procedure called.
     - e.g.: ```MPI_Init(&argc , &argv);```
+    - MPI_THREAD_SINGLE: single thread, above
+    - MPI_THREAD_FUNNELED: All MPI calls are made by the master thread
+      - outside the OpenMP parallel regions; or
+      - in OpenMP master regions
+      - e.g.: ```int provided; MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided);```
+        - The process may be multi-threaded, but only the main thread will make MPI calls
+    - MPI_THREAD_SERIALIZED: Only one thread can make MPI calls at a time
+      - Protected by OpenMP critical regions ```#pragma omp critical``` and then do MPI stuff
+       - e.g.: ```int provided; MPI_Init_thread(&argc, &argv, MPI_THREAD_SERIALIZED, &provided);```
+         - The process may be multi-threaded, and multiple threads may make MPI calls, but only one at a time. 
+           - That is, calls are not made concurrently from two distinct threads as all MPI calls are serialized.
+     - MPI_THREAD_MULTIPLE: Any thread can make MPI calls any time
+       - e.g.: ```int provided; MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);```
+         - Multiple threads may call MPI with no restrictions
   - ```int MPI_Finalize()```
     - Must be the last MPI procedure called, no other MPI routines may be called after it.
   - ```MPI_COMM_WORLD comm;```
@@ -839,6 +853,11 @@ is startup time and td is the time to send an integer.
         |1|0|1 // if equal key, then cmp old rank
         |2|4|3
         |3|2|2
+  - ```int MPI_Comm_dup(MPI_Comm comm, MPI_Comm * newcomm)```
+    - make a copy of MPI_COMM_WORLD
+      - containing all the same processes but in a new communicator
+    - Enables processes to communicate with each other safely within a piece of code
+      - guaranteed that messages cannot be received by other code
   - ```MPI_Comm_rank(MPI_Comm comm , int * rank)```
     - Can’t compare with other communicators
     - e.g.: ```MPI_Comm_rank(comm , &rank);```
@@ -901,6 +920,76 @@ is startup time and td is the time to send an integer.
   - ```int MPI_Reduce(void *sendbuf , void *recvbuf , int count , MPI_Datatype datatype , MPI_Op op , int root , MPI_Comm comm)```
     - count: #elements in send buffer (integer)
     - e.g.: ```MPI_Reduce(&mysum , &overallsum , 1 , MPI_INT , MPI_SUM , 0, comm);```
+  - MPI-Topology
+    - What is it?
+      - Specifying which processes are "neighbours" of each other
+      - New communicators representing neighbours
+    - Why we need it?
+      - Convenient process naming
+      - Naming scheme to fit the communication pattern
+      - Simplifies writing of code
+        - MPI provides "mapping functions"
+      - Can allow MPI to optimise communications
+    - ```int MPI_Dims_create(int nnodes, int ndims, int *dims)```
+      - nnodes: #nodes available
+      - ndims: desired #dimension for ```int ndims``` in ```MPI_Cart_create```
+      - *dims: output, e.g. [3, 3] for nnodes=9 for ndims=2 (2d)
+      - if nnodes 不能被找到一个```int *dims``` where 所有的```dims[i]```乘起来!=nnodes, 
+        - then ```dims[i]```会出现负数 (error)
+    - ```int MPI_Cart_create(MPI_Comm comm_old, int ndims, int *dims, int *periods, int reorder, MPI_Comm *comm_cart)```
+      - If size(comm_old) > size(grid), 
+        - some ranks will have comm_cart==MPI_COMM_NULL
+      - dims: Array of sizes in each dimension
+        - for a 4*5 array = [4, 5]
+      - periods: Array of 0/1, with 1 if periodic (wrapped) in this dim
+      - reorder: If true, ranks may be reordered
+      - comm cart: Output; new communicator
+    - ```int MPI_Cart_rank(MPI_Comm comm, int *coords, int *rank)```
+      - Mapping process grid coordinates to ranks
+      - comm: MPI_Cart_create comm
+      - coords: size=```int ndims```
+      - *rank: output 
+      - e.g.: ```MPI_Cart_rank(comm, [2, 1], &rank);```
+    - ```int MPI_Cart_coords(MPI_Comm comm, int rank, int maxdims, int *coords)```
+      - Mapping ranks to process grid coordinates
+      - comm: MPI_Cart_create comm
+      - rank: input to be converted
+      - maxdims: length of ```int *coords```
+      - *coords: output, e.g.: [3, 2] 
+    - ```int MPI_Cart_shift(MPI_Comm comm, int direction, int disp, int *rank_source , int *rank_dest)```
+      - Computing ranks of **my neighbouring processes** (所以他知道当前node的rank)
+      - comm: MPI_Cart_create comm
+      - direction: (shift direction) specifies the dimension in which the displacement is taken
+      - disp: (shift amount) displacement (> 0: upwards shift, < 0: downwards shift)
+      - *rank_source: ouput
+      - *rank_dest: output
+        - -1表示没有相应的进程
+      - e.g.: https://blog.csdn.net/andyelvis/article/details/42675971
+    - ```int MPI_Sendrecv_replace(void *buf, int count, MPI_Datatype datatype, int dest, int sendtag, int source, int recvtag, MPI_Comm comm, MPI_Status *status)```
+      - Sends and receives using a single buffer
+        - detail: https://www.open-mpi.org/doc/v4.0/man3/MPI_Sendrecv_replace.3.php#toc8
+      - ```MPI_SendRecv_replace (A, 1, MPI_REAL, dest, 0, source, 0, comm, status);```
+  - Customize type
+    - ```int MPI_Type_contiguous(int count, MPI_Datatype oldtype, MPI_Datatype * newtype)```
+      - derived datatype consists of a number of contiguous items of the same datatype
+    - ```int MPI_Type_vector(int count, int blocklength, int stride, MPI_Datatype oldtype, MPI_Datatype *newtype)```
+      - defined a 3x2 subsection of a 5x4 array
+      - count: 3
+      - blocklength: 2
+      - stride: 4
+      - Data that is sent depends on what buffer you pass to the send routines
+        - pass the address of the first element that should be sent
+          - for 2d array, botton left is (0, 0); so pass buf is the bottom to be sent [68]
+      - Send data that is not contiguous in memory 
+        - e.g.: small 2d matrix in a large 2d matrix
+    - ```int MPI_Type_create_struct(int count, const int array_of_blocklengths[],       const MPI_Aint array_of_displacements[], const MPI_Datatype array_of_types[],           MPI_Datatype *newtype)```
+      - e.g.: https://github.com/yangxvlin/multiple-sequence-alignment-openMP-openMPI/blob/master/submit/xuliny-seqalkway.cpp#L135
+      - ```int MPI_Type_commit(MPI_Datatype *datatype)```
+        - Once a datatype has been constructed, it needs to be committed before it is used in a message-passing call.
+        - Why? 
+          - When the type is committed, some system can "compile" the data type into an efficient representation.
+      - ```int MPI_Type_free(MPI Datatype *datatype)```
+        - After its last use, a type can also be freed with
 ## 05 prefix sum
 - sequential prefix sum (or other dyadic operation)
   - |||
