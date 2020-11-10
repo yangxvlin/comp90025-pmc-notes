@@ -808,12 +808,43 @@ is startup time and td is the time to send an integer.
     - MPI uses *communicators* to define which collection of processes may communicate with each other.
       - MPI_COMM_WORLD is the predefined communicator that includes all of your MPI processes.
     - Most MPI routines require you to specify a communicator as an argument.
-  - ```MPI_Comm_rank( MPI_Comm comm , int * rank)```
+  - ```MPI_Comm_split(MPI_Comm comm , int color /* <- group (>= 0) */,  int key /* Affects rank in newcomm */, MPI_Comm * newcomm)```
+    - **guarantees messages from the different pieces do not interact**
+    - each process has a new rank within each sub-communicator
+      - rank最小的进程会被置为0，第二小的会被置为1，以此类推。
+    - ```
+      // Get the rank and size in the original communicator
+      int world_rank, world_size;
+      MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+      MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+      
+      int color = world_rank / 4;  // 4 node per group
+      // int color = world_rank % 4;  // 4 group each with world_size/4 nodes
+
+      // Split the communicator based on the color and use the original rank for ordering
+      MPI_Comm row_comm;
+      MPI_Comm_split(MPI_COMM_WORLD, color, world_rank, &row_comm);
+
+      // new rank within each sub-communicator
+      int row_rank, row_size;
+      MPI_Comm_rank(row_comm, &row_rank);
+      MPI_Comm_size(row_comm, &row_size);
+
+      MPI_Comm_free(&row_comm);
+      ```
+      - |old rank|int key|new rank in the group|
+        |---|---|---|
+        |0|0|0
+        |1|0|1 // if equal key, then cmp old rank
+        |2|4|3
+        |3|2|2
+  - ```MPI_Comm_rank(MPI_Comm comm , int * rank)```
     - Can’t compare with other communicators
     - e.g.: ```MPI_Comm_rank(comm , &rank);```
-  - ```MPI_Comm_size( MPI_Comm comm , int * size)```
+  - ```MPI_Comm_size(MPI_Comm comm , int * size)```
     - e.g.: ```MPI_Comm_size(comm , &size);```
-  - ```int MPI_Send( void *buf , int count , MPI_Datatype datatype , int dest , int tag , MPI_Comm comm)```
+  - ```int MPI_Send( oid *buf , int count , MPI_Datatype datatype , int dest , int tag , MPI_Comm comm)```
     - Note:
       - Sender must specify a valid destination rank.
       - The communicator must be the same.
