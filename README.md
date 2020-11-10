@@ -578,6 +578,7 @@ COMP90025 - Parallel and Multicore Computing - 2020s2 - Exam review/summary shee
       |MIMD|1. more flexible given a number of PE|1. more expensive<br/>2. have multiple control unit here, which takes more space on chip and cost more time for instruction stream to arrive **(force the clock speed to be lower)**
   - MISD: There are no machines widely accepted to be MISD
   - Disadvantage: this architecture does not tell us how memory and processors are organized.
+    - They’re high level models of computing, not concrete architectures
 - Schwartz's parallel machine classes [10]
   - Advantage: tell us how memory and processors are organized
   - paracomputers = shared memory multiprocessor
