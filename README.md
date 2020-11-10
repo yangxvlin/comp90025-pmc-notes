@@ -1319,7 +1319,7 @@ is startup time and td is the time to send an integer.
 ## 08 cuda
 - different hardware components
 - execution hierarchy
-  - 2 constraint:
+  - 2 constraints:
     1) SIMP constraint
     2) independent constraint
 - Memory hierarchy
